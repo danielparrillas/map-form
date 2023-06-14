@@ -11,36 +11,24 @@ export const drawingSketch = new Sketch({
   // graphic will be selected as soon as it is created
   creationMode: "update",
   visibleElements: {
-    createTools: { circle: false, rectangle: false },
+    createTools: { circle: true, rectangle: true },
     selectionTools: { "lasso-selection": false, "rectangle-selection": false },
     settingsMenu: false,
   },
-  defaultUpdateOptions: { tool: "reshape" },
+  defaultUpdateOptions: { tool: "transform" },
 });
-
-// con esto podemos ver las coordenadas
-// drawingSketch.on("create", (e) => {
-//   if (e.state === "complete") {
-//     const geometry = e.graphic.geometry;
-//     if (geometry.type === "point") console.log("Punto");
-//     if (geometry.type === "polygon") console.log("Poligono");
-//     console.log(
-//       drawingSketch.layer.graphics.forEach((g) => console.log(g.geometry))
-//     );
-//   }
-// });
 
 // con este metodo solo podremos ingresar un tipo de geometria
-drawingSketch.on("create", (e) => {
-  if (drawingSketch.layer.graphics.length !== 0) {
-    if (
-      drawingSketch.layer.graphics.getItemAt(0).geometry.type !==
-      e.graphic.geometry.type
-    ) {
-      drawingSketch.layer.graphics.removeAll();
-    }
-  }
-});
+// drawingSketch.on("create", (e) => {
+//   if (drawingSketch.layer.graphics.length !== 0) {
+//     if (
+//       drawingSketch.layer.graphics.getItemAt(0).geometry.type !==
+//       e.graphic.geometry.type
+//     ) {
+//       drawingSketch.layer.graphics.removeAll();
+//     }
+//   }
+// });
 
 //permite cancelar un dibujo
 // drawingSketch.on("create", function (event) {

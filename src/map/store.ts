@@ -5,16 +5,8 @@ import Collection from "@arcgis/core/core/Collection";
 
 import { create } from "zustand";
 
-type GeometryType =
-  | "point"
-  | "polyline"
-  | "polygon"
-  | "extent"
-  | "multipoint"
-  | "mesh";
-
 interface UseMapStore {
-  graphic?: Graphic;
+  graphic: Graphic;
   setGraphic: (graphic?: Graphic) => void;
   geometry?: Geometry;
   setGeometry: (geometry?: Geometry) => void;
@@ -24,6 +16,7 @@ interface UseMapStore {
 }
 
 export const useMapStore = create<UseMapStore>()((set) => ({
+  graphic: new Graphic(),
   graphics: drawingSketch.layer.graphics,
   updatedGraphics: () =>
     set(() => ({ graphics: drawingSketch.layer.graphics })),
