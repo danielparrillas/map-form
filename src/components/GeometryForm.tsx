@@ -8,12 +8,16 @@ export default function GeometryForm() {
   const { setGraphic } = useMapStore();
   const [feature, setFeature] = useState<GeoJSON.Feature>();
   useEffect(() => {
-    drawingSketch.on(
-      "create",
-      (e) => e.state === "active" && setGraphic(e.graphic)
-    );
+    drawingSketch.on("create", (e) => {
+      // if (e.state === "active" || e.state === "complete" || e.state === "start")
+      setGraphic(e.graphic);
+    });
     drawingSketch.on("update", (e) => {
-      if (e.state === "active") {
+      if (
+        e.state === "active" ||
+        e.state === "complete" ||
+        e.state === "start"
+      ) {
         e.graphics.forEach((updatedGraphic) => {
           const isUpdated = drawingSketch.layer.graphics.some(
             (previousGraphic) => {
@@ -121,7 +125,7 @@ export default function GeometryForm() {
             />
           </div>
           <label>Coordenadas</label>
-          <div className="flex flex-col gap-4 h-full overflow-y-auto">
+          <div className="flex flex-col gap-4 h-full overflow-y-auto p-2">
             {feature.geometry.coordinates.map((coordinates2, index) => (
               <div key={`coords-${index}`}>
                 <InputNumber
