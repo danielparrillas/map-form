@@ -1,20 +1,19 @@
-import { Collapse, InputNumber } from "antd";
+import { InputNumber } from "antd";
 import { useEffect, useState } from "react";
-const { Panel } = Collapse;
 import { drawingSketch } from "../map/layers/drawing";
 import { useMapStore } from "../map/store";
 import { graphicToFeature } from "../utils/feature";
 
 export default function GeometryForm() {
-  const { graphic, setGraphic } = useMapStore();
+  const { setGraphic } = useMapStore();
   const [feature, setFeature] = useState<GeoJSON.Feature>();
   useEffect(() => {
     drawingSketch.on(
       "create",
-      (e) => e.state === "complete" && setGraphic(e.graphic)
+      (e) => e.state === "active" && setGraphic(e.graphic)
     );
     drawingSketch.on("update", (e) => {
-      if (e.state === "complete") {
+      if (e.state === "active") {
         e.graphics.forEach((updatedGraphic) => {
           const isUpdated = drawingSketch.layer.graphics.some(
             (previousGraphic) => {

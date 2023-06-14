@@ -7,7 +7,7 @@ import config from "@arcgis/core/config";
 import { drawingSketch } from "./layers/drawing";
 import { fullscreen } from "./ui/fullscreen";
 import { basemapToggle } from "./ui/basemapToggle";
-import { layerList } from "./ui/layerList";
+// import { layerList } from "./ui/layerList";
 //🧪 testing
 
 //⚙️ config

@@ -1,5 +1,4 @@
 import Graphic from "@arcgis/core/Graphic";
-import Geometry from "@arcgis/core/geometry/Geometry";
 import { drawingSketch } from "./layers/drawing";
 import Collection from "@arcgis/core/core/Collection";
 
