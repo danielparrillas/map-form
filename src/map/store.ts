@@ -6,17 +6,14 @@ import Collection from "@arcgis/core/core/Collection";
 import { create } from "zustand";
 
 interface UseMapStore {
-  graphic: Graphic;
+  graphic?: Graphic;
   setGraphic: (graphic?: Graphic) => void;
-  geometry?: Geometry;
-  setGeometry: (geometry?: Geometry) => void;
   graphics: Collection<Graphic>;
   updatedGraphics: () => void;
   clearGraphics: () => void;
 }
 
 export const useMapStore = create<UseMapStore>()((set) => ({
-  graphic: new Graphic(),
   graphics: drawingSketch.layer.graphics,
   updatedGraphics: () =>
     set(() => ({ graphics: drawingSketch.layer.graphics })),
@@ -25,5 +22,4 @@ export const useMapStore = create<UseMapStore>()((set) => ({
     set(() => ({ graphics: drawingSketch.layer.graphics }));
   },
   setGraphic: (graphic) => set(() => ({ graphic: graphic })),
-  setGeometry: (geometry) => set(() => ({ geometry: geometry })),
 }));

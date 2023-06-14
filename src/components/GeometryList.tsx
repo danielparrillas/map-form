@@ -28,11 +28,7 @@ export function GeometryContainer() {
         Limpiar
       </Button>
       {graphics.map((graphic, index) => (
-        <GeometryForm
-          key={`graphic-form-${index}`}
-          feature={graphicToFeature(graphic)}
-          index={index}
-        />
+        <GeometryForm />
       ))}
     </div>
   );

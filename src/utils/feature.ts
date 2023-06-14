@@ -1,6 +1,6 @@
 import Graphic from "@arcgis/core/Graphic";
 import { webMercatorToGeographic } from "@arcgis/core/geometry/support/webMercatorUtils";
-import { geojsonToArcGIS, arcgisToGeoJSON } from "@terraformer/arcgis";
+import { arcgisToGeoJSON } from "@terraformer/arcgis";
 import {
   geodesicArea,
   geodesicLength,
@@ -39,6 +39,5 @@ export const graphicToFeature = (graphic: Graphic): GeoJSON.Feature => {
       properties: {},
     };
   }
-
   return feature;
 };

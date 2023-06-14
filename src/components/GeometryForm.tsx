@@ -1,47 +1,166 @@
 import { Collapse, InputNumber } from "antd";
+import { useEffect, useState } from "react";
 const { Panel } = Collapse;
+import { drawingSketch } from "../map/layers/drawing";
+import { useMapStore } from "../map/store";
+import { graphicToFeature } from "../utils/feature";
 
-interface Props {
-  feature: GeoJSON.Feature;
-  index?: number;
-}
+export default function GeometryForm() {
+  const { graphic, setGraphic } = useMapStore();
+  const [feature, setFeature] = useState<GeoJSON.Feature>();
+  useEffect(() => {
+    drawingSketch.on(
+      "create",
+      (e) => e.state === "complete" && setGraphic(e.graphic)
+    );
+    drawingSketch.on("update", (e) => {
+      if (e.state === "complete") {
+        e.graphics.forEach((updatedGraphic) => {
+          const isUpdated = drawingSketch.layer.graphics.some(
+            (previousGraphic) => {
+              return previousGraphic.get("uid") === updatedGraphic.get("uid");
+            }
+          );
+          if (isUpdated) {
+            // El gráfico ha sido actualizado
+            setGraphic(updatedGraphic);
+            setFeature(graphicToFeature(updatedGraphic));
+          }
+        });
+      }
+    });
+    // drawingSketch.on("delete", (e) => setGraphic());
+    drawingSketch.on("redo", (e) => {
+      e.graphics.forEach((updatedGraphic) => {
+        const isUpdated = drawingSketch.layer.graphics.some(
+          (previousGraphic) => {
+            return previousGraphic.get("uid") === updatedGraphic.get("uid");
+          }
+        );
+        if (isUpdated) {
+          // El gráfico ha sido actualizado
+          setGraphic(updatedGraphic);
+          setFeature(graphicToFeature(updatedGraphic));
+        }
+      });
+    });
+    drawingSketch.on("undo", (e) => {
+      e.graphics.forEach((updatedGraphic) => {
+        const isUpdated = drawingSketch.layer.graphics.some(
+          (previousGraphic) => {
+            return previousGraphic.get("uid") === updatedGraphic.get("uid");
+          }
+        );
+        if (isUpdated) {
+          // El gráfico ha sido actualizado
+          setGraphic(updatedGraphic);
+          setFeature(graphicToFeature(updatedGraphic));
+        }
+      });
+    });
+  }, []);
 
-export default function GeometryForm({ feature }: Props) {
-  console.log("asdf");
+  if (feature === undefined) {
+    return <div></div>;
+  }
   return (
-    <Collapse size="small">
-      <Panel header={feature.geometry.type} key={1}>
-        {feature.geometry.type === "Polygon" && (
+    <div className="h-full overflow-hidden flex flex-col gap-2">
+      {feature.geometry.type === "Polygon" && (
+        <>
           <div className="flex gap-2">
-            <label>Área</label>
+            <label className="w-24">Área</label>
             <InputNumber
               value={feature.properties?.area}
               className="w-full"
               addonAfter="ha"
+              precision={6}
             />
           </div>
-        )}
-        {feature.geometry.type === "Polygon" && (
           <div className="flex gap-2">
-            <label>Perímetro</label>
+            <label className="w-24">Perímetro</label>
             <InputNumber
               value={feature.properties?.perimeter}
               className="w-full"
               addonAfter="m"
+              precision={6}
             />
           </div>
-        )}
-        {feature.geometry.type === "LineString" && (
+          <label>Coordenadas</label>
+          <div className="flex flex-col gap-4 h-full overflow-y-auto p-2">
+            {feature.geometry.coordinates.map((coordinates2) =>
+              coordinates2.map((coordinate, index) => (
+                <div key={`coords-${index}`}>
+                  <InputNumber
+                    key={`poly-x-${index}`}
+                    value={coordinate[0]}
+                    className="w-full"
+                    addonBefore="x"
+                    precision={6}
+                  />
+                  <InputNumber
+                    key={`poly-y-${index}`}
+                    value={coordinate[1]}
+                    className="w-full"
+                    addonBefore="y"
+                    precision={6}
+                  />
+                </div>
+              ))
+            )}
+          </div>
+        </>
+      )}
+      {feature.geometry.type === "LineString" && (
+        <>
           <div className="flex gap-2">
-            <label>Distancia</label>
+            <label className="w-24">Distancia</label>
             <InputNumber
               value={feature.properties?.perimeter}
               className="w-full"
               addonAfter="m"
+              precision={6}
             />
           </div>
-        )}
-      </Panel>
-    </Collapse>
+          <label>Coordenadas</label>
+          <div className="flex flex-col gap-4 h-full overflow-y-auto">
+            {feature.geometry.coordinates.map((coordinates2, index) => (
+              <div key={`coords-${index}`}>
+                <InputNumber
+                  key={`linea-x-${index}`}
+                  value={coordinates2[0]}
+                  className="w-full"
+                  addonBefore="x"
+                  precision={6}
+                />
+                <InputNumber
+                  key={`linea-y-${index}`}
+                  value={coordinates2[1]}
+                  className="w-full"
+                  addonBefore="y"
+                  precision={6}
+                />
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+      {feature.geometry.type === "Point" && (
+        <>
+          <label>Coordenadas</label>
+          <InputNumber
+            value={feature.geometry.coordinates[0]}
+            className="w-full"
+            addonBefore="x"
+            precision={6}
+          />
+          <InputNumber
+            value={feature.geometry.coordinates[1]}
+            className="w-full"
+            addonBefore="y"
+            precision={6}
+          />
+        </>
+      )}
+    </div>
   );
 }
