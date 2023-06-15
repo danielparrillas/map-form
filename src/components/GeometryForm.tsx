@@ -79,7 +79,7 @@ export default function GeometryForm() {
     return <div></div>;
   }
   return (
-    <div className="h-full overflow-hidden flex flex-col gap-2">
+    <div className="h-full overflow-hidden flex flex-col gap-2 bg-neutral-100 p-4 rounded-md">
       {feature.geometry.type === "Polygon" && (
         <>
           <div className="flex gap-2">
@@ -101,7 +101,7 @@ export default function GeometryForm() {
             />
           </div>
           <label>Coordenadas</label>
-          <div className="flex flex-col gap-4 h-full overflow-y-auto p-2">
+          <div className="flex flex-col gap-4 h-full overflow-y-auto bg-white p-2 rounded-md">
             {feature.geometry.coordinates.map((coordinates2) =>
               coordinates2.map((coordinate, index) => (
                 <div key={`coords-${index}`}>
@@ -137,7 +137,7 @@ export default function GeometryForm() {
             />
           </div>
           <label>Coordenadas</label>
-          <div className="flex flex-col gap-4 h-full overflow-y-auto p-2">
+          <div className="flex flex-col gap-4 h-full overflow-y-auto bg-white p-2 rounded-md">
             {feature.geometry.coordinates.map((coordinates2, index) => (
               <div key={`coords-${index}`}>
                 <InputNumber
@@ -162,18 +162,20 @@ export default function GeometryForm() {
       {feature.geometry.type === "Point" && (
         <>
           <label>Coordenadas</label>
-          <InputNumber
-            value={feature.geometry.coordinates[0]}
-            className="w-full"
-            addonBefore="x"
-            precision={6}
-          />
-          <InputNumber
-            value={feature.geometry.coordinates[1]}
-            className="w-full"
-            addonBefore="y"
-            precision={6}
-          />
+          <div className="bg-white p-2 rounded-md">
+            <InputNumber
+              value={feature.geometry.coordinates[0]}
+              className="w-full"
+              addonBefore="x"
+              precision={6}
+            />
+            <InputNumber
+              value={feature.geometry.coordinates[1]}
+              className="w-full"
+              addonBefore="y"
+              precision={6}
+            />
+          </div>
         </>
       )}
     </div>
