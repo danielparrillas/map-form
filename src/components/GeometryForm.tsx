@@ -9,30 +9,56 @@ export default function GeometryForm() {
   const [feature, setFeature] = useState<GeoJSON.Feature>();
   useEffect(() => {
     drawingSketch.on("create", (e) => {
-      // if (e.state === "active" || e.state === "complete" || e.state === "start")
-      setGraphic(e.graphic);
-    });
-    drawingSketch.on("update", (e) => {
-      if (
-        e.state === "active" ||
-        e.state === "complete" ||
-        e.state === "start"
-      ) {
-        e.graphics.forEach((updatedGraphic) => {
-          const isUpdated = drawingSketch.layer.graphics.some(
-            (previousGraphic) => {
-              return previousGraphic.get("uid") === updatedGraphic.get("uid");
-            }
-          );
-          if (isUpdated) {
-            // El gráfico ha sido actualizado
-            setGraphic(updatedGraphic);
-            setFeature(graphicToFeature(updatedGraphic));
-          }
-        });
+      if (e.state !== "active") {
+        setGraphic(e.graphic);
+        setFeature(graphicToFeature(e.graphic));
+      } else {
+        e.tool === "point";
       }
     });
-    // drawingSketch.on("delete", (e) => setGraphic());
+    drawingSketch.on("update", (e) => {
+      if (!!e.toolEventInfo) {
+        if (
+          e.toolEventInfo.type !== "move" &&
+          e.toolEventInfo.type !== "reshape" &&
+          e.toolEventInfo.type !== "rotate" &&
+          e.toolEventInfo.type !== "scale"
+        ) {
+          e.graphics.forEach((updatedGraphic) => {
+            const isUpdated = drawingSketch.layer.graphics.some(
+              (previousGraphic) => {
+                return previousGraphic.get("uid") === updatedGraphic.get("uid");
+              }
+            );
+            if (isUpdated) {
+              // El gráfico ha sido actualizado
+              setGraphic(updatedGraphic);
+              setFeature(graphicToFeature(updatedGraphic));
+            }
+          });
+        }
+      } else {
+        if (e.state === "start" || e.state === "complete") {
+          e.graphics.forEach((updatedGraphic) => {
+            const isUpdated = drawingSketch.layer.graphics.some(
+              (previousGraphic) => {
+                return previousGraphic.get("uid") === updatedGraphic.get("uid");
+              }
+            );
+            if (isUpdated) {
+              // El gráfico ha sido actualizado
+              setGraphic(updatedGraphic);
+              setFeature(graphicToFeature(updatedGraphic));
+            }
+          });
+        }
+      }
+    });
+
+    drawingSketch.on("delete", () => {
+      setGraphic();
+      setFeature(undefined);
+    });
     drawingSketch.on("redo", (e) => {
       e.graphics.forEach((updatedGraphic) => {
         const isUpdated = drawingSketch.layer.graphics.some(

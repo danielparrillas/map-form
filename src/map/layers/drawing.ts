@@ -15,7 +15,7 @@ export const drawingSketch = new Sketch({
     selectionTools: { "lasso-selection": false, "rectangle-selection": false },
     settingsMenu: false,
   },
-  defaultUpdateOptions: { tool: "transform" },
+  defaultUpdateOptions: { tool: "reshape" },
 });
 
 // con este metodo solo podremos ingresar un tipo de geometria
