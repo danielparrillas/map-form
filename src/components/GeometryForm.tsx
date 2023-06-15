@@ -9,49 +9,35 @@ export default function GeometryForm() {
   const [feature, setFeature] = useState<GeoJSON.Feature>();
   useEffect(() => {
     drawingSketch.on("create", (e) => {
-      if (e.state !== "active") {
+      if (e.state === "complete") {
         setGraphic(e.graphic);
         setFeature(graphicToFeature(e.graphic));
-      } else {
-        e.tool === "point";
       }
     });
     drawingSketch.on("update", (e) => {
-      if (!!e.toolEventInfo) {
-        if (
-          e.toolEventInfo.type !== "move" &&
-          e.toolEventInfo.type !== "reshape" &&
-          e.toolEventInfo.type !== "rotate" &&
-          e.toolEventInfo.type !== "scale"
-        ) {
-          e.graphics.forEach((updatedGraphic) => {
-            const isUpdated = drawingSketch.layer.graphics.some(
-              (previousGraphic) => {
-                return previousGraphic.get("uid") === updatedGraphic.get("uid");
-              }
-            );
-            if (isUpdated) {
-              // El gráfico ha sido actualizado
-              setGraphic(updatedGraphic);
-              setFeature(graphicToFeature(updatedGraphic));
+      const isEditEventType =
+        e.toolEventInfo &&
+        e.toolEventInfo.type !== "move" &&
+        e.toolEventInfo.type !== "reshape" &&
+        e.toolEventInfo.type !== "rotate" &&
+        e.toolEventInfo.type !== "scale";
+
+      const isStartOrCompleteState =
+        !e.toolEventInfo && (e.state === "start" || e.state === "complete");
+
+      if (isEditEventType || isStartOrCompleteState) {
+        e.graphics.forEach((updatedGraphic) => {
+          const isUpdated = drawingSketch.layer.graphics.some(
+            (previousGraphic) => {
+              return previousGraphic.get("uid") === updatedGraphic.get("uid");
             }
-          });
-        }
-      } else {
-        if (e.state === "start" || e.state === "complete") {
-          e.graphics.forEach((updatedGraphic) => {
-            const isUpdated = drawingSketch.layer.graphics.some(
-              (previousGraphic) => {
-                return previousGraphic.get("uid") === updatedGraphic.get("uid");
-              }
-            );
-            if (isUpdated) {
-              // El gráfico ha sido actualizado
-              setGraphic(updatedGraphic);
-              setFeature(graphicToFeature(updatedGraphic));
-            }
-          });
-        }
+          );
+          if (isUpdated) {
+            // El gráfico ha sido actualizado
+            setGraphic(updatedGraphic);
+            setFeature(graphicToFeature(updatedGraphic));
+          }
+        });
       }
     });
 

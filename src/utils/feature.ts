@@ -11,7 +11,6 @@ import Polyline from "@arcgis/core/geometry/Polyline";
 
 export const graphicToFeature = (graphic: Graphic): GeoJSON.Feature => {
   let feature: GeoJSON.Feature;
-
   const geometry = arcgisToGeoJSON(webMercatorToGeographic(graphic.geometry));
   if (graphic.geometry.type === "polyline") {
     const line = new Polyline(graphic.geometry);
