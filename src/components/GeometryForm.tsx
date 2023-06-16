@@ -1,83 +1,29 @@
 import { InputNumber } from "antd";
 import { useEffect, useState } from "react";
-import { drawingSketch } from "../map/layers/drawing";
 import { useMapStore } from "../map/store";
 import { graphicToFeature } from "../utils/feature";
 
 export default function GeometryForm() {
-  const { setGraphic } = useMapStore();
+  const { graphic } = useMapStore();
   const [feature, setFeature] = useState<GeoJSON.Feature>();
   useEffect(() => {
-    drawingSketch.on("create", (e) => {
-      if (e.state === "complete") {
-        setGraphic(e.graphic);
-        setFeature(graphicToFeature(e.graphic));
-      }
-    });
-    drawingSketch.on("update", (e) => {
-      const isEditEventType =
-        e.toolEventInfo &&
-        e.toolEventInfo.type !== "move" &&
-        e.toolEventInfo.type !== "reshape" &&
-        e.toolEventInfo.type !== "rotate" &&
-        e.toolEventInfo.type !== "scale";
-
-      const isStartOrCompleteState =
-        !e.toolEventInfo && (e.state === "start" || e.state === "complete");
-
-      if (isEditEventType || isStartOrCompleteState) {
-        e.graphics.forEach((updatedGraphic) => {
-          const isUpdated = drawingSketch.layer.graphics.some(
-            (previousGraphic) => {
-              return previousGraphic.get("uid") === updatedGraphic.get("uid");
-            }
-          );
-          if (isUpdated) {
-            // El gráfico ha sido actualizado
-            setGraphic(updatedGraphic);
-            setFeature(graphicToFeature(updatedGraphic));
-          }
-        });
-      }
-    });
-
-    drawingSketch.on("delete", () => {
-      setGraphic();
-      setFeature(undefined);
-    });
-    drawingSketch.on("redo", (e) => {
-      e.graphics.forEach((updatedGraphic) => {
-        const isUpdated = drawingSketch.layer.graphics.some(
-          (previousGraphic) => {
-            return previousGraphic.get("uid") === updatedGraphic.get("uid");
-          }
-        );
-        if (isUpdated) {
-          // El gráfico ha sido actualizado
-          setGraphic(updatedGraphic);
-          setFeature(graphicToFeature(updatedGraphic));
-        }
-      });
-    });
-    drawingSketch.on("undo", (e) => {
-      e.graphics.forEach((updatedGraphic) => {
-        const isUpdated = drawingSketch.layer.graphics.some(
-          (previousGraphic) => {
-            return previousGraphic.get("uid") === updatedGraphic.get("uid");
-          }
-        );
-        if (isUpdated) {
-          // El gráfico ha sido actualizado
-          setGraphic(updatedGraphic);
-          setFeature(graphicToFeature(updatedGraphic));
-        }
-      });
-    });
-  }, []);
+    !!graphic ? setFeature(graphicToFeature(graphic)) : setFeature(undefined);
+  }, [graphic?.geometry]);
 
   if (feature === undefined) {
-    return <div></div>;
+    return (
+      <div className="h-full overflow-hidden flex flex-col gap-2 bg-neutral-100 p-4 rounded-md"></div>
+    );
   }
+
+  const onchange = (value: any, key: string = "") => {
+    value = Number(value);
+    if (key === "Enter" && !isNaN(value)) {
+      console.log(value);
+      console.log(graphic?.get("uid"));
+    }
+  };
+
   return (
     <div className="h-full overflow-hidden flex flex-col gap-2 bg-neutral-100 p-4 rounded-md">
       {feature.geometry.type === "Polygon" && (
@@ -168,6 +114,8 @@ export default function GeometryForm() {
               className="w-full"
               addonBefore="x"
               precision={6}
+              // onChange={(value) => onchange(value)}
+              onKeyDown={(e) => onchange(e.currentTarget.value, e.key)}
             />
             <InputNumber
               value={feature.geometry.coordinates[1]}

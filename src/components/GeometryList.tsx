@@ -7,19 +7,13 @@ import GeometryForm from "./GeometryForm";
 import { graphicToFeature } from "../utils/feature";
 
 export function GeometryContainer() {
-  const { graphics, clearGraphics, updatedGraphics } = useMapStore();
+  const { graphics, clearGraphics, setGraphics } = useMapStore();
   useEffect(() => {
-    drawingSketch.on(
-      "create",
-      (e) => e.state === "complete" && updatedGraphics()
-    );
-    drawingSketch.on(
-      "update",
-      (e) => e.state === "complete" && updatedGraphics()
-    );
-    drawingSketch.on("delete", () => updatedGraphics());
-    drawingSketch.on("redo", () => updatedGraphics());
-    drawingSketch.on("undo", () => updatedGraphics());
+    drawingSketch.on("create", (e) => e.state === "complete" && setGraphics());
+    drawingSketch.on("update", (e) => e.state === "complete" && setGraphics());
+    drawingSketch.on("delete", () => setGraphics());
+    drawingSketch.on("redo", () => setGraphics());
+    drawingSketch.on("undo", () => setGraphics());
   }, []);
 
   return (
