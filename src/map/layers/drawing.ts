@@ -1,5 +1,6 @@
 import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
 import Sketch from "@arcgis/core/widgets/Sketch";
+import { setGraphic } from "../store";
 
 const drawingLayer = new GraphicsLayer({ title: "✏️ Capa de dibujo" });
 
@@ -15,25 +16,62 @@ export const drawingSketch = new Sketch({
     selectionTools: { "lasso-selection": false, "rectangle-selection": false },
     settingsMenu: false,
   },
-  defaultUpdateOptions: { tool: "reshape" },
 });
 
-// con este metodo solo podremos ingresar un tipo de geometria
-// drawingSketch.on("create", (e) => {
-//   if (drawingSketch.layer.graphics.length !== 0) {
-//     if (
-//       drawingSketch.layer.graphics.getItemAt(0).geometry.type !==
-//       e.graphic.geometry.type
-//     ) {
-//       drawingSketch.layer.graphics.removeAll();
-//     }
-//   }
-// });
+drawingSketch.on("create", (e) => {
+  if (e.state === "complete") {
+    setGraphic(e.graphic);
+  }
+});
 
-//permite cancelar un dibujo
-// drawingSketch.on("create", function (event) {
-//   // Si ya hay una geometría presente, desactiva el dibujo o muestra un mensaje al usuario
-//   drawingSketch.cancel();
-//   console.log("Solo se permite crear una geometría.");
-//   return;
-// });
+drawingSketch.on("update", (e) => {
+  const isEditEventType =
+    e.toolEventInfo &&
+    e.toolEventInfo.type !== "move" &&
+    e.toolEventInfo.type !== "reshape" &&
+    e.toolEventInfo.type !== "rotate" &&
+    e.toolEventInfo.type !== "scale";
+
+  const isStartOrCompleteState =
+    !e.toolEventInfo && (e.state === "start" || e.state === "complete");
+
+  if (isEditEventType || isStartOrCompleteState) {
+    e.graphics.forEach((updatedGraphic) => {
+      const isUpdated = drawingSketch.layer.graphics.some((previousGraphic) => {
+        return previousGraphic.get("uid") === updatedGraphic.get("uid");
+      });
+      if (isUpdated) {
+        // El gráfico ha sido actualizado
+        setGraphic(updatedGraphic);
+      }
+    });
+  }
+});
+
+drawingSketch.on("delete", () => {
+  setGraphic();
+});
+
+drawingSketch.on("redo", (e) => {
+  e.graphics.forEach((updatedGraphic) => {
+    const isUpdated = drawingSketch.layer.graphics.some((previousGraphic) => {
+      return previousGraphic.get("uid") === updatedGraphic.get("uid");
+    });
+    if (isUpdated) {
+      // El gráfico ha sido actualizado
+      setGraphic(updatedGraphic);
+    }
+  });
+});
+
+drawingSketch.on("undo", (e) => {
+  e.graphics.forEach((updatedGraphic) => {
+    const isUpdated = drawingSketch.layer.graphics.some((previousGraphic) => {
+      return previousGraphic.get("uid") === updatedGraphic.get("uid");
+    });
+    if (isUpdated) {
+      // El gráfico ha sido actualizado
+      setGraphic(updatedGraphic);
+    }
+  });
+});

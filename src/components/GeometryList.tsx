@@ -1,13 +1,13 @@
 import { drawingSketch } from "../map/layers/drawing";
 import { useEffect } from "react";
-import { useMapStore } from "../map/store";
+import { useMapStore, clearGraphics, setGraphics } from "../map/store";
 import { Button } from "antd";
 
 import GeometryForm from "./GeometryForm";
 import { graphicToFeature } from "../utils/feature";
 
 export function GeometryContainer() {
-  const { graphics, clearGraphics, setGraphics } = useMapStore();
+  const { graphics } = useMapStore();
   useEffect(() => {
     drawingSketch.on("create", (e) => e.state === "complete" && setGraphics());
     drawingSketch.on("update", (e) => e.state === "complete" && setGraphics());
