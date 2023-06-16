@@ -1,6 +1,6 @@
 import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
 import Sketch from "@arcgis/core/widgets/Sketch";
-import { setGraphic } from "../store";
+import { setGraphic } from "./store";
 
 const drawingLayer = new GraphicsLayer({ title: "✏️ Capa de dibujo" });
 

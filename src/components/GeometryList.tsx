@@ -1,10 +1,8 @@
-import { drawingSketch } from "../map/layers/drawing";
+import { drawingSketch } from "../map/drawing";
 import { useEffect } from "react";
 import { useMapStore, clearGraphics, setGraphics } from "../map/store";
 import { Button } from "antd";
-
 import GeometryForm from "./GeometryForm";
-import { graphicToFeature } from "../utils/feature";
 
 export function GeometryContainer() {
   const { graphics } = useMapStore();
@@ -15,6 +13,10 @@ export function GeometryContainer() {
     drawingSketch.on("redo", () => setGraphics());
     drawingSketch.on("undo", () => setGraphics());
   }, []);
+
+  if (!graphics) {
+    return <div></div>;
+  }
 
   return (
     <div className="w-96">
