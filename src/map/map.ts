@@ -4,7 +4,7 @@ import WebMap from "@arcgis/core/WebMap";
 import config from "@arcgis/core/config";
 //🗺️ imports
 // import { graphicsLayer } from "./layers/graphic";
-import { drawingSketch } from "./sketch";
+import { sketch } from "./sketch";
 import { fullscreen } from "./fullscreen";
 import { basemapToggle } from "./basemapToggle";
 // import { layerList } from "./ui/layerList";
@@ -32,8 +32,8 @@ view.when(() => {
   basemapToggle.view = view;
   view.ui.add(basemapToggle, "bottom-left");
   //3️⃣ add drawing sketch
-  drawingSketch.view = view;
-  view.ui.add(drawingSketch, "top-right");
+  sketch.view = view;
+  view.ui.add(sketch, "top-right");
   //4️⃣ layer list
   // layerList.view = view;
   // view.ui.add(layerList, "top-right");
@@ -43,6 +43,6 @@ view.when(() => {
 });
 
 function addLayers() {
-  view.map.add(drawingSketch.layer);
+  view.map.add(sketch.layer);
   // view.map.add(graphicsLayer);
 }

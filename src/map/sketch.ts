@@ -2,13 +2,13 @@ import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
 import Sketch from "@arcgis/core/widgets/Sketch";
 import { setGraphic } from "./store";
 
-const drawingLayer = new GraphicsLayer({ title: "✏️ Capa de dibujo" });
+const sketchLayer = new GraphicsLayer({ title: "✏️ Capa de dibujo" });
 
 //view model
 
 // create a new sketch widget
-export const drawingSketch = new Sketch({
-  layer: drawingLayer,
+export const sketch = new Sketch({
+  layer: sketchLayer,
   // graphic will be selected as soon as it is created
   creationMode: "update",
   visibleElements: {
@@ -18,13 +18,13 @@ export const drawingSketch = new Sketch({
   },
 });
 
-drawingSketch.on("create", (e) => {
+sketch.on("create", (e) => {
   if (e.state === "complete") {
     setGraphic(e.graphic);
   }
 });
 
-drawingSketch.on("update", (e) => {
+sketch.on("update", (e) => {
   const isEditEventType =
     e.toolEventInfo &&
     e.toolEventInfo.type !== "move" &&
@@ -37,7 +37,7 @@ drawingSketch.on("update", (e) => {
 
   if (isEditEventType || isStartOrCompleteState) {
     e.graphics.forEach((updatedGraphic) => {
-      const isUpdated = drawingSketch.layer.graphics.some((previousGraphic) => {
+      const isUpdated = sketch.layer.graphics.some((previousGraphic) => {
         return previousGraphic.get("uid") === updatedGraphic.get("uid");
       });
       if (isUpdated) {
@@ -48,13 +48,13 @@ drawingSketch.on("update", (e) => {
   }
 });
 
-drawingSketch.on("delete", () => {
+sketch.on("delete", () => {
   setGraphic();
 });
 
-drawingSketch.on("redo", (e) => {
+sketch.on("redo", (e) => {
   e.graphics.forEach((updatedGraphic) => {
-    const isUpdated = drawingSketch.layer.graphics.some((previousGraphic) => {
+    const isUpdated = sketch.layer.graphics.some((previousGraphic) => {
       return previousGraphic.get("uid") === updatedGraphic.get("uid");
     });
     if (isUpdated) {
@@ -64,9 +64,9 @@ drawingSketch.on("redo", (e) => {
   });
 });
 
-drawingSketch.on("undo", (e) => {
+sketch.on("undo", (e) => {
   e.graphics.forEach((updatedGraphic) => {
-    const isUpdated = drawingSketch.layer.graphics.some((previousGraphic) => {
+    const isUpdated = sketch.layer.graphics.some((previousGraphic) => {
       return previousGraphic.get("uid") === updatedGraphic.get("uid");
     });
     if (isUpdated) {

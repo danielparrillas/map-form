@@ -1,5 +1,5 @@
 import Graphic from "@arcgis/core/Graphic";
-import { drawingSketch } from "./sketch";
+import { sketch } from "./sketch";
 import Collection from "@arcgis/core/core/Collection";
 
 import { create } from "zustand";
@@ -15,12 +15,12 @@ export const useMapStore = create<UseMapStore>()(() => ({}));
  * limipia la lista de graficos del mapa y la vista
  */
 export const clearGraphics = () => {
-  drawingSketch.layer.graphics.removeAll();
-  useMapStore.setState({ graphics: drawingSketch.layer.graphics });
+  sketch.layer.graphics.removeAll();
+  useMapStore.setState({ graphics: sketch.layer.graphics });
 };
 
 export const setGraphics = () => {
-  useMapStore.setState({ graphics: drawingSketch.layer.graphics });
+  useMapStore.setState({ graphics: sketch.layer.graphics });
 };
 
 /**

@@ -1,4 +1,4 @@
-import { drawingSketch } from "../map/sketch";
+import { sketch } from "../map/sketch";
 import { useEffect } from "react";
 import { useMapStore, clearGraphics, setGraphics } from "../map/store";
 import { Button } from "antd";
@@ -7,11 +7,11 @@ import GeometryForm from "./GeometryForm";
 export function GeometryContainer() {
   const { graphics } = useMapStore();
   useEffect(() => {
-    drawingSketch.on("create", (e) => e.state === "complete" && setGraphics());
-    drawingSketch.on("update", (e) => e.state === "complete" && setGraphics());
-    drawingSketch.on("delete", () => setGraphics());
-    drawingSketch.on("redo", () => setGraphics());
-    drawingSketch.on("undo", () => setGraphics());
+    sketch.on("create", (e) => e.state === "complete" && setGraphics());
+    sketch.on("update", (e) => e.state === "complete" && setGraphics());
+    sketch.on("delete", () => setGraphics());
+    sketch.on("redo", () => setGraphics());
+    sketch.on("undo", () => setGraphics());
   }, []);
 
   if (!graphics) {
