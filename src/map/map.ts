@@ -4,7 +4,7 @@ import WebMap from "@arcgis/core/WebMap";
 import config from "@arcgis/core/config";
 //🗺️ imports
 // import { graphicsLayer } from "./layers/graphic";
-import { drawingSketch } from "./drawing";
+import { drawingSketch } from "./sketch";
 import { fullscreen } from "./fullscreen";
 import { basemapToggle } from "./basemapToggle";
 // import { layerList } from "./ui/layerList";

@@ -1,4 +1,4 @@
-import { drawingSketch } from "../map/drawing";
+import { drawingSketch } from "../map/sketch";
 import { useEffect } from "react";
 import { useMapStore, clearGraphics, setGraphics } from "../map/store";
 import { Button } from "antd";
