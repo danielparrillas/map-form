@@ -40,3 +40,20 @@ body {
 ::-webkit-scrollbar-thumb:active {
   background: #c2c2c2;
 }
+
+/* 🗺️ArcGIS */
+.esri-sketch__panel.esri-sketch__info-panel {
+  border-radius: 0 0 0.3rem 0.3rem;
+}
+
+.esri-component {
+  border-radius: 0.3rem;
+}
+
+.esri-zoom:first-child {
+  border-radius: 0.3rem 0.3rem 0 0;
+}
+
+.esri-zoom:last-child {
+  border-radius: 0 0 0.3rem 0.3rem;
+}

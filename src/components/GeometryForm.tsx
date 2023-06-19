@@ -1,7 +1,7 @@
 import { InputNumber, Button } from "antd";
 import { useEffect, useState } from "react";
 import { useMapStore, removeGraphic, updatePolygon } from "../hooks/mapStore";
-import { sketch } from "../map/sketch";
+import { DeleteOutlined } from "@ant-design/icons";
 import Polygon from "@arcgis/core/geometry/Polygon";
 import Polyline from "@arcgis/core/geometry/Polyline";
 import Graphic from "@arcgis/core/Graphic";
@@ -30,22 +30,11 @@ export default function GeometryForm() {
     setGraphic(undefined);
   };
 
-  if (graphic === undefined) {
-    return (
-      <div className="h-full overflow-hidden flex flex-col gap-2 bg-neutral-100 p-4 rounded-md"></div>
-    );
-  } else if (graphic.geometry.type === "point") {
+  const getPoint = () => {
+    if (graphic === undefined) return;
     const point = new Point(webMercatorToGeographic(graphic.geometry));
     return (
-      <div className="h-full overflow-hidden flex flex-col gap-2 bg-neutral-100 p-4 rounded-md">
-        <Button
-          onClick={() => {
-            removeGraphic(graphic.get("uid"));
-            setGraphic(undefined);
-          }}
-        >
-          Borrar
-        </Button>
+      <>
         <label>Coordenadas</label>
         <div className="bg-white p-2 rounded-md">
           <InputNumber
@@ -62,12 +51,15 @@ export default function GeometryForm() {
             precision={6}
           />
         </div>
-      </div>
+      </>
     );
-  } else if (graphic.geometry.type === "polyline") {
+  };
+
+  const getPolyline = () => {
+    if (graphic === undefined) return;
     const polyline = new Polyline(webMercatorToGeographic(graphic.geometry));
     return (
-      <div className="h-full overflow-hidden flex flex-col gap-2 bg-neutral-100 p-4 rounded-md">
+      <>
         <div className="flex gap-2">
           <label className="w-24">Distancia</label>
           <InputNumber
@@ -112,62 +104,85 @@ export default function GeometryForm() {
             ))
           )}
         </div>
-      </div>
+      </>
     );
-  } else if (graphic.geometry.type === "polygon") {
+  };
+
+  const getPolygon = () => {
+    if (graphic === undefined) return;
     const polygon = new Polygon(webMercatorToGeographic(graphic.geometry));
     return (
-      <div className="h-full overflow-hidden flex flex-col gap-2 bg-neutral-100 p-4 rounded-md">
-        <div className="h-full overflow-hidden flex flex-col gap-2 bg-neutral-100 p-4 rounded-md">
-          <div className="flex gap-2">
-            <label className="w-24">Área</label>
-            <InputNumber
-              value={Math.abs(geodesicArea(polygon, "hectares"))}
-              className="w-full"
-              addonAfter="ha"
-              precision={6}
-              readOnly
-            />
-          </div>
-          <div className="flex gap-2">
-            <label className="w-24">Perímetro</label>
-            <InputNumber
-              value={geodesicLength(polygon, "meters")}
-              className="w-full"
-              addonAfter="m"
-              precision={6}
-              readOnly
-            />
-          </div>
-          <label>Coordenadas</label>
-          <div className="flex flex-col gap-4 h-full overflow-y-auto bg-white p-2 rounded-md">
-            {polygon.rings.map((subRings) =>
-              subRings.map((coords, index) => (
-                <div key={`coords-${index}`}>
-                  <InputNumber
-                    key={`poly-x-${index}`}
-                    value={coords[0]}
-                    className="w-full"
-                    addonBefore="x"
-                    precision={6}
-                  />
-                  <InputNumber
-                    key={`poly-y-${index}`}
-                    value={coords[1]}
-                    className="w-full"
-                    addonBefore="y"
-                    precision={6}
-                  />
-                </div>
-              ))
-            )}
-          </div>
+      <>
+        <div className="flex gap-2">
+          <label className="w-24">Área</label>
+          <InputNumber
+            value={Math.abs(geodesicArea(polygon, "hectares"))}
+            className="w-full"
+            addonAfter="ha"
+            precision={6}
+            readOnly
+          />
         </div>
+        <div className="flex gap-2">
+          <label className="w-24">Perímetro</label>
+          <InputNumber
+            value={geodesicLength(polygon, "meters")}
+            className="w-full"
+            addonAfter="m"
+            precision={6}
+            readOnly
+          />
+        </div>
+        <label>Coordenadas</label>
+        <div className="flex flex-col gap-4 h-full overflow-y-auto bg-white p-2 rounded-md">
+          {polygon.rings.map((subRings) =>
+            subRings.map((coords, index) => (
+              <div key={`coords-${index}`}>
+                <InputNumber
+                  key={`poly-x-${index}`}
+                  value={coords[0]}
+                  className="w-full"
+                  addonBefore="x"
+                  precision={6}
+                />
+                <InputNumber
+                  key={`poly-y-${index}`}
+                  value={coords[1]}
+                  className="w-full"
+                  addonBefore="y"
+                  precision={6}
+                />
+              </div>
+            ))
+          )}
+        </div>
+      </>
+    );
+  };
+
+  return (
+    <div className="h-full overflow-hidden flex flex-col gap-2 bg-neutral-100 p-4 rounded-md">
+      {!graphic
+        ? ""
+        : graphic.geometry.type === "point"
+        ? getPoint()
+        : graphic.geometry.type === "polyline"
+        ? getPolyline()
+        : graphic.geometry.type === "polygon"
+        ? getPolygon()
+        : ""}
+      <div className="w-full h-full grid place-content-end">
+        {!!graphic && (
+          <Button
+            onClick={() => {
+              !!graphic && removeGraphic(graphic.get("uid"));
+              setGraphic(undefined);
+            }}
+            icon={<DeleteOutlined />}
+            danger
+          />
+        )}
       </div>
-    );
-  } else {
-    return (
-      <div className="h-full overflow-hidden flex flex-col gap-2 bg-neutral-100 p-4 rounded-md"></div>
-    );
-  }
+    </div>
+  );
 }
