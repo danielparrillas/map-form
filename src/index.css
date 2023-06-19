@@ -41,7 +41,8 @@ body {
   background: #c2c2c2;
 }
 
-/* 🗺️ArcGIS */
+/* *🗺️ArcGIS */
+/* sketch */
 .esri-sketch__panel.esri-sketch__info-panel {
   border-radius: 0 0 0.3rem 0.3rem;
 }
@@ -56,4 +57,16 @@ body {
 
 .esri-zoom:last-child {
   border-radius: 0 0 0.3rem 0.3rem;
+}
+
+/* Basemap Toogle */
+.esri-basemap-thumbnail__image.esri-basemap-toggle__image,
+.esri-basemap-thumbnail.esri-basemap-toggle__container {
+  border-radius: 0.5rem;
+}
+
+/* Zoom Buttons */
+.esri-widget--button.esri-widget.esri-interactive,
+.esri-component.esri-zoom.esri-widget {
+  border-radius: 0.5rem;
 }
