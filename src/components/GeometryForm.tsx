@@ -1,6 +1,6 @@
 import { InputNumber, Button } from "antd";
 import { useEffect, useState } from "react";
-import { useMapStore, removeGraphic, updatePolygon } from "../hooks/mapStore";
+import { useMapStore, removeGraphic, updatePoint } from "../hooks/mapStore";
 import { DeleteOutlined } from "@ant-design/icons";
 import Polygon from "@arcgis/core/geometry/Polygon";
 import Polyline from "@arcgis/core/geometry/Polyline";
@@ -20,35 +20,40 @@ export default function GeometryForm() {
     !!graphicFromMap ? setGraphic(graphicFromMap) : setGraphic(undefined);
   }, [graphicFromMap?.geometry]);
 
-  const onchange = (value: any, key: string = "") => {
-    value = Number(value);
-    if (key !== "Enter" || isNaN(value) || !graphic) return;
-    console.log(value);
-    const graphicUid = graphic.get("uid");
-    typeof graphicUid === "string" ||
-      (typeof graphicUid === "number" && removeGraphic(graphicUid));
-    setGraphic(undefined);
-  };
-
   const getPoint = () => {
     if (graphic === undefined) return;
     const point = new Point(webMercatorToGeographic(graphic.geometry));
     return (
-      <>
+      <div className="flex flex-col gap-1 h-full overflow-y-auto p-1 bg-neutral-100">
         <InputNumber
-          value={point.x}
+          value={Number(point.x.toFixed(6))}
           className="w-full"
           addonBefore="x"
-          precision={6}
-          onKeyDown={(e) => onchange(e.currentTarget.value, e.key)}
+          onChange={(value) => {
+            if (!!value) {
+              updatePoint(
+                graphic.get("uid"),
+                Number(value.toFixed(6)),
+                point.y
+              );
+            }
+          }}
         />
         <InputNumber
-          value={point.y}
+          value={Number(point.y.toFixed(6))}
           className="w-full"
           addonBefore="y"
-          precision={6}
+          onChange={(value) => {
+            if (!!value) {
+              updatePoint(
+                graphic.get("uid"),
+                point.x,
+                Number(value.toFixed(6))
+              );
+            }
+          }}
         />
-      </>
+      </div>
     );
   };
 
@@ -58,43 +63,31 @@ export default function GeometryForm() {
     return (
       <>
         <InputNumber
-          value={geodesicLength(polyline, "meters")}
+          value={geodesicLength(polyline, "meters").toFixed(6)}
           className="w-full"
           addonBefore="Distancia"
           addonAfter="m"
-          precision={6}
           readOnly
         />
+        <div className="grid grid-cols-2 text-center">
+          <label>X</label>
+          <label>Y</label>
+        </div>
         <div className="flex flex-col gap-1 h-full overflow-y-auto p-1 bg-neutral-100">
           {polyline.paths.map((subPaths, pathsI) =>
             subPaths.map((coord, index) => (
               <div key={`coords-${index}`} className="grid grid-cols-2 gap-1">
                 <InputNumber
-                  size="small"
+                  // size="small"
                   key={`poly-x-${index}`}
-                  value={coord[0]}
+                  value={Number(coord[0].toFixed(6))}
                   className="w-full"
-                  addonBefore="x"
-                  precision={6}
-                  onChange={(value) => {
-                    if (!!value) {
-                      updatePolygon(
-                        graphic.get("uid"),
-                        value,
-                        pathsI,
-                        index,
-                        0
-                      );
-                    }
-                  }}
                 />
                 <InputNumber
-                  size="small"
+                  // size="small"
                   key={`poly-y-${index}`}
-                  value={coord[1]}
+                  value={Number(coord[1].toFixed(6))}
                   className="w-full"
-                  addonBefore="y"
-                  precision={6}
                 />
               </div>
             ))
@@ -110,40 +103,36 @@ export default function GeometryForm() {
     return (
       <>
         <InputNumber
-          value={Math.abs(geodesicArea(polygon, "hectares"))}
+          value={Math.abs(geodesicArea(polygon, "hectares")).toFixed(6)}
           className="w-full"
           addonBefore="Área"
           addonAfter="ha"
-          precision={6}
           readOnly
         />
         <InputNumber
-          value={geodesicLength(polygon, "meters")}
+          value={geodesicLength(polygon, "meters").toFixed(6)}
           className="w-full"
           addonBefore="Perímetro"
           addonAfter="m"
-          precision={6}
           readOnly
         />
-        <div className="flex flex-col gap-1 overflow-y-auto rounded-md p-1 bg-neutral-100">
+        <div className="grid grid-cols-2 text-center">
+          <label>X</label>
+          <label>Y</label>
+        </div>
+        <div className="flex flex-col h-full gap-1 overflow-y-auto rounded-md p-1 bg-neutral-100">
           {polygon.rings.map((subRings) =>
             subRings.map((coords, index) => (
               <div key={`coords-${index}`} className="grid grid-cols-2 gap-1">
                 <InputNumber
-                  size="small"
                   key={`poly-x-${index}`}
-                  value={coords[0]}
+                  value={Number(coords[0].toFixed(6))}
                   className="w-full"
-                  addonBefore="x"
-                  precision={6}
                 />
                 <InputNumber
-                  size="small"
                   key={`poly-y-${index}`}
-                  value={coords[1]}
+                  value={Number(coords[1].toFixed(6))}
                   className="w-full"
-                  addonBefore="y"
-                  precision={6}
                 />
               </div>
             ))
@@ -169,9 +158,12 @@ export default function GeometryForm() {
           <Button
             onClick={() => {
               !!graphic && removeGraphic(graphic.get("uid"));
+              console.log("sadf");
+
               setGraphic(undefined);
             }}
             icon={<DeleteOutlined />}
+            onKeyDown={(e) => console.log(e)}
             danger
           />
         )}

@@ -1,8 +1,12 @@
 import Graphic from "@arcgis/core/Graphic";
 import { sketch } from "../map/sketch";
 import Collection from "@arcgis/core/core/Collection";
-
 import { create } from "zustand";
+import Point from "@arcgis/core/geometry/Point";
+import {
+  webMercatorToGeographic,
+  geographicToWebMercator,
+} from "@arcgis/core/geometry/support/webMercatorUtils";
 
 interface UseMapStore {
   graphic?: Graphic;
@@ -40,19 +44,20 @@ export const removeGraphic = (graphicUID: string | number) => {
       break;
     }
   }
+  console.log("erew");
 };
 
-export const updatePolygon = (
+export const updatePoint = (
   graphicUID: string | number,
-  value: number,
-  index1: number,
-  index2: number,
-  index3: number
+  x: number,
+  y: number
 ) => {
   const graphics = sketch.layer.graphics;
-  graphics.forEach((graphic) => {
+  graphics.forEach((graphic, index) => {
     if (graphic.get("uid") === graphicUID) {
-      // graphic.setGeometry(newGeometry);
+      const point = new Point({ x, y });
+      graphic.geometry = geographicToWebMercator(point);
+      setGraphic(graphic);
     }
   });
 };
