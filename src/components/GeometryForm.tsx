@@ -35,22 +35,19 @@ export default function GeometryForm() {
     const point = new Point(webMercatorToGeographic(graphic.geometry));
     return (
       <>
-        <label>Coordenadas</label>
-        <div className="bg-white p-2 rounded-md">
-          <InputNumber
-            value={point.x}
-            className="w-full"
-            addonBefore="x"
-            precision={6}
-            onKeyDown={(e) => onchange(e.currentTarget.value, e.key)}
-          />
-          <InputNumber
-            value={point.y}
-            className="w-full"
-            addonBefore="y"
-            precision={6}
-          />
-        </div>
+        <InputNumber
+          value={point.x}
+          className="w-full"
+          addonBefore="x"
+          precision={6}
+          onKeyDown={(e) => onchange(e.currentTarget.value, e.key)}
+        />
+        <InputNumber
+          value={point.y}
+          className="w-full"
+          addonBefore="y"
+          precision={6}
+        />
       </>
     );
   };
@@ -60,22 +57,20 @@ export default function GeometryForm() {
     const polyline = new Polyline(webMercatorToGeographic(graphic.geometry));
     return (
       <>
-        <div className="flex gap-2">
-          <label className="w-24">Distancia</label>
-          <InputNumber
-            value={geodesicLength(polyline, "meters")}
-            className="w-full"
-            addonAfter="m"
-            precision={6}
-            readOnly
-          />
-        </div>
-        <label>Coordenadas</label>
-        <div className="flex flex-col gap-4 h-full overflow-y-auto bg-white p-2 rounded-md">
+        <InputNumber
+          value={geodesicLength(polyline, "meters")}
+          className="w-full"
+          addonBefore="Distancia"
+          addonAfter="m"
+          precision={6}
+          readOnly
+        />
+        <div className="flex flex-col gap-1 h-full overflow-y-auto p-1 bg-neutral-100">
           {polyline.paths.map((subPaths, pathsI) =>
             subPaths.map((coord, index) => (
-              <div key={`coords-${index}`}>
+              <div key={`coords-${index}`} className="grid grid-cols-2 gap-1">
                 <InputNumber
+                  size="small"
                   key={`poly-x-${index}`}
                   value={coord[0]}
                   className="w-full"
@@ -94,6 +89,7 @@ export default function GeometryForm() {
                   }}
                 />
                 <InputNumber
+                  size="small"
                   key={`poly-y-${index}`}
                   value={coord[1]}
                   className="w-full"
@@ -113,32 +109,28 @@ export default function GeometryForm() {
     const polygon = new Polygon(webMercatorToGeographic(graphic.geometry));
     return (
       <>
-        <div className="flex gap-2">
-          <label className="w-24">Área</label>
-          <InputNumber
-            value={Math.abs(geodesicArea(polygon, "hectares"))}
-            className="w-full"
-            addonAfter="ha"
-            precision={6}
-            readOnly
-          />
-        </div>
-        <div className="flex gap-2">
-          <label className="w-24">Perímetro</label>
-          <InputNumber
-            value={geodesicLength(polygon, "meters")}
-            className="w-full"
-            addonAfter="m"
-            precision={6}
-            readOnly
-          />
-        </div>
-        <label>Coordenadas</label>
-        <div className="flex flex-col gap-4 h-full overflow-y-auto bg-white p-2 rounded-md">
+        <InputNumber
+          value={Math.abs(geodesicArea(polygon, "hectares"))}
+          className="w-full"
+          addonBefore="Área"
+          addonAfter="ha"
+          precision={6}
+          readOnly
+        />
+        <InputNumber
+          value={geodesicLength(polygon, "meters")}
+          className="w-full"
+          addonBefore="Perímetro"
+          addonAfter="m"
+          precision={6}
+          readOnly
+        />
+        <div className="flex flex-col gap-1 overflow-y-auto rounded-md p-1 bg-neutral-100">
           {polygon.rings.map((subRings) =>
             subRings.map((coords, index) => (
-              <div key={`coords-${index}`}>
+              <div key={`coords-${index}`} className="grid grid-cols-2 gap-1">
                 <InputNumber
+                  size="small"
                   key={`poly-x-${index}`}
                   value={coords[0]}
                   className="w-full"
@@ -146,6 +138,7 @@ export default function GeometryForm() {
                   precision={6}
                 />
                 <InputNumber
+                  size="small"
                   key={`poly-y-${index}`}
                   value={coords[1]}
                   className="w-full"
@@ -161,7 +154,7 @@ export default function GeometryForm() {
   };
 
   return (
-    <div className="h-full overflow-hidden flex flex-col gap-2 bg-neutral-100 p-4 rounded-md">
+    <div className="h-full overflow-hidden flex flex-col gap-2 bg-white p-4 rounded-md">
       {!graphic
         ? ""
         : graphic.geometry.type === "point"
@@ -171,7 +164,7 @@ export default function GeometryForm() {
         : graphic.geometry.type === "polygon"
         ? getPolygon()
         : ""}
-      <div className="w-full h-full grid place-content-end">
+      <div className="w-full h-min grid place-content-end">
         {!!graphic && (
           <Button
             onClick={() => {
