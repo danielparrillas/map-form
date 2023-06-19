@@ -7,6 +7,7 @@ import {
   webMercatorToGeographic,
   geographicToWebMercator,
 } from "@arcgis/core/geometry/support/webMercatorUtils";
+import Polyline from "@arcgis/core/geometry/Polyline";
 
 interface UseMapStore {
   graphic?: Graphic;
@@ -53,10 +54,30 @@ export const updatePoint = (
   y: number
 ) => {
   const graphics = sketch.layer.graphics;
-  graphics.forEach((graphic, index) => {
+  graphics.forEach((graphic) => {
     if (graphic.get("uid") === graphicUID) {
       const point = new Point({ x, y });
       graphic.geometry = geographicToWebMercator(point);
+      setGraphic(graphic);
+    }
+  });
+};
+
+export const updateLine = (
+  graphicUID: string | number,
+  value: number,
+  index1: number,
+  index2: number,
+  index3: number
+) => {
+  const graphics = sketch.layer.graphics;
+  graphics.forEach((graphic) => {
+    if (graphic.get("uid") === graphicUID) {
+      const lineString = new Polyline(
+        webMercatorToGeographic(graphic.geometry)
+      );
+      lineString.paths[index1][index2][index3] = value;
+      graphic.geometry = geographicToWebMercator(lineString);
       setGraphic(graphic);
     }
   });

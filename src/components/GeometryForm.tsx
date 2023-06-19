@@ -1,6 +1,11 @@
 import { InputNumber, Button } from "antd";
 import { useEffect, useState } from "react";
-import { useMapStore, removeGraphic, updatePoint } from "../hooks/mapStore";
+import {
+  useMapStore,
+  removeGraphic,
+  updatePoint,
+  updateLine,
+} from "../hooks/mapStore";
 import { DeleteOutlined } from "@ant-design/icons";
 import Polygon from "@arcgis/core/geometry/Polygon";
 import Polyline from "@arcgis/core/geometry/Polyline";
@@ -78,16 +83,24 @@ export default function GeometryForm() {
             subPaths.map((coord, index) => (
               <div key={`coords-${index}`} className="grid grid-cols-2 gap-1">
                 <InputNumber
-                  // size="small"
                   key={`poly-x-${index}`}
                   value={Number(coord[0].toFixed(6))}
                   className="w-full"
+                  onChange={(value) => {
+                    if (!!value) {
+                      updateLine(graphic.get("uid"), value, pathsI, index, 0);
+                    }
+                  }}
                 />
                 <InputNumber
-                  // size="small"
                   key={`poly-y-${index}`}
                   value={Number(coord[1].toFixed(6))}
                   className="w-full"
+                  onChange={(value) => {
+                    if (!!value) {
+                      updateLine(graphic.get("uid"), value, pathsI, index, 1);
+                    }
+                  }}
                 />
               </div>
             ))
