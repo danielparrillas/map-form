@@ -5,6 +5,7 @@ import {
   removeGraphic,
   updatePoint,
   updateLine,
+  updatePolygon,
 } from "../hooks/mapStore";
 import { DeleteOutlined } from "@ant-design/icons";
 import Polygon from "@arcgis/core/geometry/Polygon";
@@ -134,18 +135,46 @@ export default function GeometryForm() {
           <label>Y</label>
         </div>
         <div className="flex flex-col h-full gap-1 overflow-y-auto rounded-md p-1 bg-neutral-100">
-          {polygon.rings.map((subRings) =>
+          {polygon.rings.map((subRings, sri) =>
             subRings.map((coords, index) => (
               <div key={`coords-${index}`} className="grid grid-cols-2 gap-1">
                 <InputNumber
                   key={`poly-x-${index}`}
                   value={Number(coords[0].toFixed(6))}
                   className="w-full"
+                  onChange={(value) => {
+                    if (!!value) {
+                      let isFirstOrLast =
+                        index === 0 || index === subRings.length - 1;
+                      updatePolygon(
+                        graphic.get("uid"),
+                        value,
+                        sri,
+                        index,
+                        0,
+                        isFirstOrLast
+                      );
+                    }
+                  }}
                 />
                 <InputNumber
                   key={`poly-y-${index}`}
                   value={Number(coords[1].toFixed(6))}
                   className="w-full"
+                  onChange={(value) => {
+                    if (!!value) {
+                      let isFirstOrLast =
+                        index === 0 || index === subRings.length - 1;
+                      updatePolygon(
+                        graphic.get("uid"),
+                        value,
+                        sri,
+                        index,
+                        1,
+                        isFirstOrLast
+                      );
+                    }
+                  }}
                 />
               </div>
             ))

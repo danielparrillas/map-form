@@ -8,6 +8,7 @@ import {
   geographicToWebMercator,
 } from "@arcgis/core/geometry/support/webMercatorUtils";
 import Polyline from "@arcgis/core/geometry/Polyline";
+import Polygon from "@arcgis/core/geometry/Polygon";
 
 interface UseMapStore {
   graphic?: Graphic;
@@ -77,6 +78,32 @@ export const updateLine = (
         webMercatorToGeographic(graphic.geometry)
       );
       lineString.paths[index1][index2][index3] = value;
+      graphic.geometry = geographicToWebMercator(lineString);
+      setGraphic(graphic);
+    }
+  });
+};
+
+export const updatePolygon = (
+  graphicUID: string | number,
+  value: number,
+  index1: number,
+  index2: number,
+  index3: number,
+  isFirstOrLast: boolean
+) => {
+  isFirstOrLast && console.log("isFirstOrLast");
+  const graphics = sketch.layer.graphics;
+  graphics.forEach((graphic) => {
+    if (graphic.get("uid") === graphicUID) {
+      const lineString = new Polygon(webMercatorToGeographic(graphic.geometry));
+      if (isFirstOrLast) {
+        const lastIndex = lineString.rings[index1].length - 1;
+        lineString.rings[index1][0][index3] = value;
+        lineString.rings[index1][lastIndex][index3] = value;
+      } else {
+        lineString.rings[index1][index2][index3] = value;
+      }
       graphic.geometry = geographicToWebMercator(lineString);
       setGraphic(graphic);
     }
