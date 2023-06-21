@@ -1,10 +1,11 @@
-import { useMapStore, selectGraphic } from "../hooks/mapStore";
-import { Tag } from "antd";
+import { useMapStore, selectGraphic, clearGraphics } from "../hooks/mapStore";
+import { Tag, Button, Popconfirm } from "antd";
 import {
   RadiusBottomleftOutlined,
   EnterOutlined,
   AimOutlined,
   DownloadOutlined,
+  ClearOutlined,
 } from "@ant-design/icons";
 //<EnterOutlined />
 export default function LayerList() {
@@ -78,20 +79,21 @@ export default function LayerList() {
             ))}
       </div>
       <div className="flex gap-2">
-        <Tag
-          color="cyan"
-          icon={<DownloadOutlined />}
-          className="shadow-md h-7 font-bold flex items-center cursor-pointer rounded-md"
-        >
+        <Button color="cyan" icon={<DownloadOutlined />}>
           Geojson
-        </Tag>
-        <Tag
-          color="blue"
-          icon={<DownloadOutlined />}
-          className="shadow-md h-7 font-bold flex items-center cursor-pointer rounded-md"
-        >
+        </Button>
+        <Button color="blue" icon={<DownloadOutlined />}>
           KML
-        </Tag>
+        </Button>
+        <Popconfirm
+          title="Limpiar mapa"
+          description="¿Desea eliminar todas las geometrias dibujadas?"
+          cancelText="No"
+          okText="Si"
+          onConfirm={() => clearGraphics()}
+        >
+          <Button color="red" icon={<ClearOutlined />} danger />
+        </Popconfirm>
       </div>
     </div>
   );

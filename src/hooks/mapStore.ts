@@ -29,11 +29,6 @@ export const clearGraphics = () => {
 export const setGraphics = () => {
   useMapStore.setState({ graphics: sketch.layer.graphics });
 };
-
-/**
- * Setea el grafico que muestra la vista
- * @param graphic
- */
 export const setGraphic = (graphic?: Graphic) => {
   useMapStore.setState({ graphic: graphic });
 };
