@@ -19,12 +19,16 @@ interface UseMapStore {
 
 export const useMapStore = create<UseMapStore>()(() => ({}));
 
-export const generateGeoJSON = (): GeoJSON.Feature[] => {
-  let featureCollection: GeoJSON.Feature[] = [];
+export const generateGeoJSON = () => {
+  let features: GeoJSON.Feature[] = [];
   sketch.layer.graphics.forEach((graphic) =>
-    featureCollection.push(graphicToFeature(graphic))
+    features.push(graphicToFeature(graphic))
   );
-  return featureCollection;
+  return {
+    type: "FeatureCollection",
+    features,
+    properties: {},
+  };
 };
 
 export const clearGraphics = () => {

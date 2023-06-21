@@ -4,16 +4,50 @@ import {
   clearGraphics,
   generateGeoJSON,
 } from "../hooks/mapStore";
-import { Tag, Button, Popconfirm } from "antd";
+import { Tag, Button, Popconfirm, Drawer } from "antd";
+import ReactJson from "react-json-view";
 import {
   RadiusBottomleftOutlined,
   EnterOutlined,
   AimOutlined,
   DownloadOutlined,
   ClearOutlined,
+  EyeOutlined,
 } from "@ant-design/icons";
-//<EnterOutlined />
+import { useState } from "react";
+
 export default function LayerList() {
+  const [open, setOpen] = useState(false);
+
+  const showDrawer = () => {
+    setOpen(true);
+  };
+
+  const onClose = () => {
+    setOpen(false);
+  };
+  const handleDownloadGeoJSON = () => {
+    const nombreArchivo = "features.geojson";
+    // Crear un enlace temporal para la descarga
+    const enlaceDescarga = document.createElement("a");
+    enlaceDescarga.href =
+      "data:text/plain;charset=utf-8," +
+      encodeURIComponent(JSON.stringify(generateGeoJSON()));
+    enlaceDescarga.download = nombreArchivo;
+    // Simular el clic en el enlace para iniciar la descarga
+    enlaceDescarga.click();
+  };
+  // const handleDownloadKML = () => {
+  //   const nombreArchivo = "features.kml";
+  //   // Crear un enlace temporal para la descarga
+  //   const enlaceDescarga = document.createElement("a");
+  //   enlaceDescarga.href =
+  //     "data:text/plain;charset=utf-8," +
+  //     encodeURIComponent(JSON.stringify(generateGeoJSON()));
+  //   enlaceDescarga.download = nombreArchivo;
+  //   // Simular el clic en el enlace para iniciar la descarga
+  //   enlaceDescarga.click();
+  // };
   const { graphic: selectedGraphic, graphics } = useMapStore();
   return (
     <div className="h-min grid gap-2 bg-white p-4 rounded-md shadow-sm">
@@ -84,11 +118,7 @@ export default function LayerList() {
             ))}
       </div>
       <div className="flex gap-2">
-        <Button
-          color="cyan"
-          icon={<DownloadOutlined />}
-          onClick={() => console.log(generateGeoJSON())}
-        >
+        <Button color="cyan" icon={<EyeOutlined />} onClick={showDrawer}>
           Geojson
         </Button>
         <Button color="blue" icon={<DownloadOutlined />}>
@@ -104,6 +134,29 @@ export default function LayerList() {
           <Button color="red" icon={<ClearOutlined />} danger />
         </Popconfirm>
       </div>
+      <Drawer
+        title={
+          <div className="flex gap-2">
+            Vista previa de GeoJSON
+            <Button
+              color="blue"
+              icon={<DownloadOutlined />}
+              type="primary"
+              size="small"
+              onClick={handleDownloadGeoJSON}
+            />
+          </div>
+        }
+        placement="left"
+        onClose={onClose}
+        open={open}
+      >
+        <ReactJson
+          src={generateGeoJSON()}
+          displayDataTypes={false}
+          indentWidth={2}
+        />
+      </Drawer>
     </div>
   );
 }
