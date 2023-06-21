@@ -185,7 +185,7 @@ export default function GeometryForm() {
   };
 
   return (
-    <div className="h-full overflow-hidden flex flex-col gap-2 bg-white p-4 rounded-md">
+    <div className="h-full overflow-hidden flex flex-col gap-2 bg-white p-4 rounded-md shadow-sm">
       {!graphic
         ? ""
         : graphic.geometry.type === "point"

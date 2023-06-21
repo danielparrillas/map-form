@@ -9,6 +9,7 @@ import {
 } from "@arcgis/core/geometry/support/webMercatorUtils";
 import Polyline from "@arcgis/core/geometry/Polyline";
 import Polygon from "@arcgis/core/geometry/Polygon";
+import { view } from "../map/map";
 
 interface UseMapStore {
   graphic?: Graphic;
@@ -37,6 +38,20 @@ export const setGraphic = (graphic?: Graphic) => {
   useMapStore.setState({ graphic: graphic });
 };
 
+export const selectGraphic = (graphicUID: string | number) => {
+  const graphics = sketch.layer.graphics;
+  for (let index = 0; index < graphics.length; index++) {
+    const item = graphics.getItemAt(index);
+    if (item.get("uid") === graphicUID) {
+      view.goTo(item);
+
+      if (item.geometry.type === "point") view.zoom = 20;
+      setGraphic(item);
+      break;
+    }
+  }
+};
+
 export const removeGraphic = (graphicUID: string | number) => {
   const graphics = sketch.layer.graphics;
   for (let index = 0; index < graphics.length; index++) {
@@ -46,7 +61,7 @@ export const removeGraphic = (graphicUID: string | number) => {
       break;
     }
   }
-  console.log("erew");
+  setGraphics();
 };
 
 export const updatePoint = (
@@ -114,6 +129,7 @@ export const updatePolygon = (
 sketch.on("create", (e) => {
   if (e.state === "complete") {
     setGraphic(e.graphic);
+    setGraphics();
   }
 });
 
@@ -143,6 +159,7 @@ sketch.on("update", (e) => {
 
 sketch.on("delete", () => {
   setGraphic();
+  setGraphics();
 });
 
 sketch.on("redo", (e) => {
