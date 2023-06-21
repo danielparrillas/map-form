@@ -10,6 +10,7 @@ import {
 import Polyline from "@arcgis/core/geometry/Polyline";
 import Polygon from "@arcgis/core/geometry/Polygon";
 import { view } from "../map/map";
+import { graphicToFeature } from "../utils/feature";
 
 interface UseMapStore {
   graphic?: Graphic;
@@ -18,9 +19,14 @@ interface UseMapStore {
 
 export const useMapStore = create<UseMapStore>()(() => ({}));
 
-/**
- * limipia la lista de graficos del mapa y la vista
- */
+export const generateGeoJSON = (): GeoJSON.Feature[] => {
+  let featureCollection: GeoJSON.Feature[] = [];
+  sketch.layer.graphics.forEach((graphic) =>
+    featureCollection.push(graphicToFeature(graphic))
+  );
+  return featureCollection;
+};
+
 export const clearGraphics = () => {
   sketch.layer.graphics.removeAll();
   useMapStore.setState({ graphics: sketch.layer.graphics });

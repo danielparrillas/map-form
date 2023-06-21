@@ -1,4 +1,9 @@
-import { useMapStore, selectGraphic, clearGraphics } from "../hooks/mapStore";
+import {
+  useMapStore,
+  selectGraphic,
+  clearGraphics,
+  generateGeoJSON,
+} from "../hooks/mapStore";
 import { Tag, Button, Popconfirm } from "antd";
 import {
   RadiusBottomleftOutlined,
@@ -79,7 +84,11 @@ export default function LayerList() {
             ))}
       </div>
       <div className="flex gap-2">
-        <Button color="cyan" icon={<DownloadOutlined />}>
+        <Button
+          color="cyan"
+          icon={<DownloadOutlined />}
+          onClick={() => console.log(generateGeoJSON())}
+        >
           Geojson
         </Button>
         <Button color="blue" icon={<DownloadOutlined />}>

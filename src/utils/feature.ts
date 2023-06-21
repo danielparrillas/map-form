@@ -18,7 +18,8 @@ export const graphicToFeature = (graphic: Graphic): GeoJSON.Feature => {
       type: "Feature",
       geometry,
       properties: {
-        perimeter: geodesicLength(line, "meters"),
+        length: geodesicLength(line, "meters"),
+        lengthUnit: "meters",
       },
     };
   } else if (graphic.geometry.type === "polygon") {
@@ -28,7 +29,9 @@ export const graphicToFeature = (graphic: Graphic): GeoJSON.Feature => {
       geometry,
       properties: {
         perimeter: geodesicLength(polygon, "meters"),
+        perimeterUnit: "meters",
         area: geodesicArea(polygon, "hectares"),
+        areaUnit: "hectareas",
       },
     };
   } else {
