@@ -11,6 +11,7 @@ import Polyline from "@arcgis/core/geometry/Polyline";
 import Polygon from "@arcgis/core/geometry/Polygon";
 import { view } from "../map/map";
 import { graphicToFeature } from "../utils/feature";
+import tokml from "tokml";
 
 interface UseMapStore {
   graphic?: Graphic;
@@ -19,7 +20,7 @@ interface UseMapStore {
 
 export const useMapStore = create<UseMapStore>()(() => ({}));
 
-export const generateGeoJSON = () => {
+export const generateGeoJSON = (): GeoJSON.FeatureCollection => {
   let features: GeoJSON.Feature[] = [];
   sketch.layer.graphics.forEach((graphic) =>
     features.push(graphicToFeature(graphic))
@@ -27,7 +28,6 @@ export const generateGeoJSON = () => {
   return {
     type: "FeatureCollection",
     features,
-    properties: {},
   };
 };
 
@@ -126,6 +126,30 @@ export const updatePolygon = (
       setGraphic(graphic);
     }
   });
+};
+
+export const downloadGeoJSON = () => {
+  const nombreArchivo = "export.geojson";
+  // Crear un enlace temporal para la descarga
+  const enlaceDescarga = document.createElement("a");
+  enlaceDescarga.href =
+    "data:text/plain;charset=utf-8," +
+    encodeURIComponent(JSON.stringify(generateGeoJSON()));
+  enlaceDescarga.download = nombreArchivo;
+  // Simular el clic en el enlace para iniciar la descarga
+  enlaceDescarga.click();
+};
+export const downloadKML = () => {
+  const kmlString = tokml(generateGeoJSON());
+  console.log(typeof kmlString);
+  const blob = new Blob([kmlString], {
+    type: "application/vnd.google-earth.kml+xml",
+  });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "export.kml";
+  link.click();
 };
 
 //⏺️ Vamos a actualizar la vista con estos eventos del sketch

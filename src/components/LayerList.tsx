@@ -3,6 +3,8 @@ import {
   selectGraphic,
   clearGraphics,
   generateGeoJSON,
+  downloadGeoJSON,
+  downloadKML,
 } from "../hooks/mapStore";
 import { Tag, Button, Popconfirm, Drawer } from "antd";
 import ReactJson from "react-json-view";
@@ -15,7 +17,6 @@ import {
   EyeOutlined,
 } from "@ant-design/icons";
 import { useState } from "react";
-import tokml from "tokml";
 
 export default function LayerList() {
   const [open, setOpen] = useState(false);
@@ -27,28 +28,7 @@ export default function LayerList() {
   const onClose = () => {
     setOpen(false);
   };
-  const handleDownloadGeoJSON = () => {
-    const nombreArchivo = "features.geojson";
-    // Crear un enlace temporal para la descarga
-    const enlaceDescarga = document.createElement("a");
-    enlaceDescarga.href =
-      "data:text/plain;charset=utf-8," +
-      encodeURIComponent(JSON.stringify(generateGeoJSON()));
-    enlaceDescarga.download = nombreArchivo;
-    // Simular el clic en el enlace para iniciar la descarga
-    enlaceDescarga.click();
-  };
-  const handleDownloadKML = () => {
-    const kmlString = tokml(generateGeoJSON());
-    const blob = new Blob([kmlString], {
-      type: "application/vnd.google-earth.kml+xml",
-    });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "file.kml";
-    link.click();
-  };
+
   const { graphic: selectedGraphic, graphics } = useMapStore();
   return (
     <div className="h-min grid gap-2 bg-white p-4 rounded-md shadow-sm">
@@ -122,11 +102,7 @@ export default function LayerList() {
         <Button color="cyan" icon={<EyeOutlined />} onClick={showDrawer}>
           Geojson
         </Button>
-        <Button
-          color="blue"
-          icon={<DownloadOutlined />}
-          onClick={handleDownloadKML}
-        >
+        <Button color="blue" icon={<DownloadOutlined />} onClick={downloadKML}>
           KML
         </Button>
         <Popconfirm
@@ -148,7 +124,7 @@ export default function LayerList() {
               icon={<DownloadOutlined />}
               type="primary"
               size="small"
-              onClick={handleDownloadGeoJSON}
+              onClick={downloadGeoJSON}
             />
           </div>
         }

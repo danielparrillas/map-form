@@ -1,4 +1,4 @@
 declare module "tokml" {
-  const tokml: any;
+  function tokml(featureCollection: GeoJSON.FeatureCollection): string;
   export default tokml;
 }
