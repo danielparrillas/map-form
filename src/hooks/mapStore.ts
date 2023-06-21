@@ -141,7 +141,6 @@ export const downloadGeoJSON = () => {
 };
 export const downloadKML = () => {
   const kmlString = tokml(generateGeoJSON());
-  console.log(typeof kmlString);
   const blob = new Blob([kmlString], {
     type: "application/vnd.google-earth.kml+xml",
   });
