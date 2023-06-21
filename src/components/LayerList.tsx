@@ -15,6 +15,7 @@ import {
   EyeOutlined,
 } from "@ant-design/icons";
 import { useState } from "react";
+import tokml from "tokml";
 
 export default function LayerList() {
   const [open, setOpen] = useState(false);
@@ -37,17 +38,17 @@ export default function LayerList() {
     // Simular el clic en el enlace para iniciar la descarga
     enlaceDescarga.click();
   };
-  // const handleDownloadKML = () => {
-  //   const nombreArchivo = "features.kml";
-  //   // Crear un enlace temporal para la descarga
-  //   const enlaceDescarga = document.createElement("a");
-  //   enlaceDescarga.href =
-  //     "data:text/plain;charset=utf-8," +
-  //     encodeURIComponent(JSON.stringify(generateGeoJSON()));
-  //   enlaceDescarga.download = nombreArchivo;
-  //   // Simular el clic en el enlace para iniciar la descarga
-  //   enlaceDescarga.click();
-  // };
+  const handleDownloadKML = () => {
+    const kmlString = tokml(generateGeoJSON());
+    const blob = new Blob([kmlString], {
+      type: "application/vnd.google-earth.kml+xml",
+    });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "file.kml";
+    link.click();
+  };
   const { graphic: selectedGraphic, graphics } = useMapStore();
   return (
     <div className="h-min grid gap-2 bg-white p-4 rounded-md shadow-sm">
@@ -121,7 +122,11 @@ export default function LayerList() {
         <Button color="cyan" icon={<EyeOutlined />} onClick={showDrawer}>
           Geojson
         </Button>
-        <Button color="blue" icon={<DownloadOutlined />}>
+        <Button
+          color="blue"
+          icon={<DownloadOutlined />}
+          onClick={handleDownloadKML}
+        >
           KML
         </Button>
         <Popconfirm
