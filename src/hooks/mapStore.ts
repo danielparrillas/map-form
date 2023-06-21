@@ -44,7 +44,6 @@ export const selectGraphic = (graphicUID: string | number) => {
     const item = graphics.getItemAt(index);
     if (item.get("uid") === graphicUID) {
       view.goTo(item);
-
       if (item.geometry.type === "point") view.zoom = 20;
       setGraphic(item);
       break;
@@ -107,7 +106,6 @@ export const updatePolygon = (
   index3: number,
   isFirstOrLast: boolean
 ) => {
-  isFirstOrLast && console.log("isFirstOrLast");
   const graphics = sketch.layer.graphics;
   graphics.forEach((graphic) => {
     if (graphic.get("uid") === graphicUID) {

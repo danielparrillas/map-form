@@ -200,12 +200,9 @@ export default function GeometryForm() {
           <Button
             onClick={() => {
               !!graphic && removeGraphic(graphic.get("uid"));
-              console.log("sadf");
-
               setGraphic(undefined);
             }}
             icon={<DeleteOutlined />}
-            onKeyDown={(e) => console.log(e)}
             danger
           />
         )}
