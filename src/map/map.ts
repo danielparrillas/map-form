@@ -22,7 +22,7 @@ export const view = new MapView({
     basemap: "arcgis-imagery",
   }),
   center: [-88.72444100946737, 13.916831121334241],
-  zoom: 15, //8
+  zoom: 15,
 });
 
 //⏺️ cuando este lista la instancia del mapa

@@ -1,11 +1,4 @@
-import {
-  useMapStore,
-  selectGraphic,
-  clearGraphics,
-  generateGeoJSON,
-  downloadGeoJSON,
-  downloadKML,
-} from "../hooks/mapStore";
+import { useMapStore, selectGraphic, clearGraphics } from "../hooks/mapStore";
 import { Tag, Button, Popconfirm, Drawer } from "antd";
 import ReactJson from "react-json-view";
 import {
@@ -17,9 +10,15 @@ import {
   EyeOutlined,
 } from "@ant-design/icons";
 import { useState } from "react";
+import {
+  downloadGeoJSON,
+  downloadKML,
+  graphicToFeature,
+} from "../utils/geoJSON";
 
 export default function LayerList() {
   const [open, setOpen] = useState(false);
+  const { graphic } = useMapStore();
 
   const showDrawer = () => {
     setOpen(true);
@@ -35,7 +34,7 @@ export default function LayerList() {
       <div className="flex flex-col gap-2">
         <label>Figuras</label>
       </div>
-      <div className="h-24 overflow-y-auto bg-neutral-100 rounded-md p-2 grid grid-cols-2 gap-x-2 gap-y-1">
+      <div className="h-6 overflow-y-auto bg-neutral-100 rounded-md p-2 grid grid-cols-1 gap-x-2 gap-y-1">
         {graphics &&
           graphics
             .sort(
@@ -102,7 +101,11 @@ export default function LayerList() {
         <Button color="cyan" icon={<EyeOutlined />} onClick={showDrawer}>
           Geojson
         </Button>
-        <Button color="blue" icon={<DownloadOutlined />} onClick={downloadKML}>
+        <Button
+          color="blue"
+          icon={<DownloadOutlined />}
+          onClick={() => !!graphic && downloadKML(graphicToFeature(graphic))}
+        >
           KML
         </Button>
         <Popconfirm
@@ -124,7 +127,9 @@ export default function LayerList() {
               icon={<DownloadOutlined />}
               type="primary"
               size="small"
-              onClick={downloadGeoJSON}
+              onClick={() =>
+                !!graphic && downloadGeoJSON(graphicToFeature(graphic))
+              }
             />
           </div>
         }
@@ -133,7 +138,7 @@ export default function LayerList() {
         open={open}
       >
         <ReactJson
-          src={generateGeoJSON()}
+          src={!!graphic ? graphicToFeature(graphic) : {}}
           displayDataTypes={false}
           indentWidth={2}
         />

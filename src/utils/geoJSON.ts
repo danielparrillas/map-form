@@ -7,7 +7,7 @@ import {
 } from "@arcgis/core/geometry/geometryEngine";
 import Polygon from "@arcgis/core/geometry/Polygon";
 import Polyline from "@arcgis/core/geometry/Polyline";
-// import Point from "@arcgis/core/geometry/Point";
+import tokml from "tokml";
 
 export const graphicToFeature = (graphic: Graphic): GeoJSON.Feature => {
   let feature: GeoJSON.Feature;
@@ -42,4 +42,32 @@ export const graphicToFeature = (graphic: Graphic): GeoJSON.Feature => {
     };
   }
   return feature;
+};
+
+export const downloadGeoJSON = (
+  geoJSON: GeoJSON.Feature | GeoJSON.FeatureCollection
+) => {
+  const nombreArchivo = "export.geojson";
+  // Crear un enlace temporal para la descarga
+  const enlaceDescarga = document.createElement("a");
+  enlaceDescarga.href =
+    "data:text/plain;charset=utf-8," +
+    encodeURIComponent(JSON.stringify(geoJSON));
+  enlaceDescarga.download = nombreArchivo;
+  // Simular el clic en el enlace para iniciar la descarga
+  enlaceDescarga.click();
+};
+
+export const downloadKML = (
+  geoJSON: GeoJSON.Feature | GeoJSON.FeatureCollection
+) => {
+  const kmlString = tokml(geoJSON);
+  const blob = new Blob([kmlString], {
+    type: "application/vnd.google-earth.kml+xml",
+  });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "export.kml";
+  link.click();
 };

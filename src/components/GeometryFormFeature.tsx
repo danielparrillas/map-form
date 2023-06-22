@@ -1,7 +1,7 @@
 import { InputNumber } from "antd";
 import { useEffect, useState } from "react";
 import { useMapStore } from "../hooks/mapStore";
-import { graphicToFeature } from "../utils/feature";
+import { graphicToFeature } from "../utils/geoJSON";
 import { sketch } from "../map/sketch";
 import Polygon from "@arcgis/core/geometry/Polygon";
 import Polyline from "@arcgis/core/geometry/Polyline";
