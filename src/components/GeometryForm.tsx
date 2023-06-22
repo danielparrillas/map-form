@@ -1,5 +1,6 @@
-import { InputNumber, Button } from "antd";
+import { InputNumber, Button, Tag, Drawer } from "antd";
 import { useEffect, useState } from "react";
+import ReactJson from "react-json-view";
 import {
   useMapStore,
   removeGraphic,
@@ -7,6 +8,13 @@ import {
   updateLine,
   updatePolygon,
 } from "../hooks/mapStore";
+import {
+  RadiusBottomleftOutlined,
+  EnterOutlined,
+  AimOutlined,
+  DownloadOutlined,
+  EyeOutlined,
+} from "@ant-design/icons";
 import { DeleteOutlined } from "@ant-design/icons";
 import Polygon from "@arcgis/core/geometry/Polygon";
 import Polyline from "@arcgis/core/geometry/Polyline";
@@ -17,14 +25,28 @@ import {
   geodesicArea,
   geodesicLength,
 } from "@arcgis/core/geometry/geometryEngine";
+import {
+  downloadGeoJSON,
+  downloadKML,
+  graphicToFeature,
+} from "../utils/geoJSON";
 
 export default function GeometryForm() {
   const { graphic: graphicFromMap } = useMapStore();
   const [graphic, setGraphic] = useState<Graphic>();
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     !!graphicFromMap ? setGraphic(graphicFromMap) : setGraphic(undefined);
   }, [graphicFromMap?.geometry]);
+
+  const showDrawer = () => {
+    setOpen(true);
+  };
+
+  const onClose = () => {
+    setOpen(false);
+  };
 
   const getPoint = () => {
     if (graphic === undefined) return;
@@ -186,6 +208,43 @@ export default function GeometryForm() {
 
   return (
     <div className="h-full overflow-hidden flex flex-col gap-2 bg-white p-4 rounded-md shadow-sm">
+      {!!graphic ? (
+        <Tag
+          color={
+            graphic.geometry.type === "point"
+              ? "gold-inverse"
+              : graphic.geometry.type === "polyline"
+              ? "green-inverse"
+              : graphic.geometry.type === "polygon"
+              ? "red-inverse"
+              : "default"
+          }
+          icon={
+            graphic.geometry.type === "point" ? (
+              <AimOutlined />
+            ) : graphic.geometry.type === "polyline" ? (
+              <EnterOutlined />
+            ) : graphic.geometry.type === "polygon" ? (
+              <RadiusBottomleftOutlined />
+            ) : (
+              <RadiusBottomleftOutlined />
+            )
+          }
+          className="w-full"
+        >
+          {graphic.geometry.type === "point"
+            ? "Punto"
+            : graphic.geometry.type === "polyline"
+            ? "Línea"
+            : graphic.geometry.type === "polygon"
+            ? "Polígono"
+            : "Otro"}
+        </Tag>
+      ) : (
+        <Tag icon={<AimOutlined />} className="w-full">
+          Vacío
+        </Tag>
+      )}
       {!graphic
         ? ""
         : graphic.geometry.type === "point"
@@ -197,16 +256,55 @@ export default function GeometryForm() {
         : ""}
       <div className="w-full h-min grid place-content-end">
         {!!graphic && (
-          <Button
-            onClick={() => {
-              !!graphic && removeGraphic(graphic.get("uid"));
-              setGraphic(undefined);
-            }}
-            icon={<DeleteOutlined />}
-            danger
-          />
+          <div className="flex gap-2">
+            <Button color="cyan" icon={<EyeOutlined />} onClick={showDrawer}>
+              Geojson
+            </Button>
+            <Button
+              color="blue"
+              icon={<DownloadOutlined />}
+              onClick={() =>
+                !!graphic && downloadKML(graphicToFeature(graphic))
+              }
+            >
+              KML
+            </Button>
+            <Button
+              onClick={() => {
+                !!graphic && removeGraphic(graphic.get("uid"));
+                setGraphic(undefined);
+              }}
+              icon={<DeleteOutlined />}
+              danger
+            />
+          </div>
         )}
       </div>
+      <Drawer
+        title={
+          <div className="flex gap-2">
+            Vista previa de GeoJSON
+            <Button
+              color="blue"
+              icon={<DownloadOutlined />}
+              type="primary"
+              size="small"
+              onClick={() =>
+                !!graphic && downloadGeoJSON(graphicToFeature(graphic))
+              }
+            />
+          </div>
+        }
+        placement="left"
+        onClose={onClose}
+        open={open}
+      >
+        <ReactJson
+          src={!!graphic ? graphicToFeature(graphic) : {}}
+          displayDataTypes={false}
+          indentWidth={2}
+        />
+      </Drawer>
     </div>
   );
 }
