@@ -230,7 +230,7 @@ export default function GeometryForm() {
               <RadiusBottomleftOutlined />
             )
           }
-          className="w-full"
+          className="w-full h-10 rounded-md flex items-center"
         >
           {graphic.geometry.type === "point"
             ? "Punto"
