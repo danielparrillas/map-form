@@ -241,7 +241,10 @@ export default function GeometryForm() {
             : "Otro"}
         </Tag>
       ) : (
-        <Tag icon={<AimOutlined />} className="w-full">
+        <Tag
+          icon={<AimOutlined />}
+          className="w-full h-10 rounded-md flex items-center"
+        >
           Vacío
         </Tag>
       )}
