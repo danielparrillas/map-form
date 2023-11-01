@@ -1,4 +1,5 @@
 import Graphic from "@arcgis/core/Graphic";
+import Geometry from "@arcgis/core/geometry/Geometry";
 import { sketch } from "../map/sketch";
 import Collection from "@arcgis/core/core/Collection";
 import { create } from "zustand";
@@ -9,14 +10,16 @@ import {
 } from "@arcgis/core/geometry/support/webMercatorUtils";
 import Polyline from "@arcgis/core/geometry/Polyline";
 import Polygon from "@arcgis/core/geometry/Polygon";
-import { view } from "../map/map";
+import { view } from "../map/config";
+import { municipiosGeoJSONLayer } from "../map/services";
 
 interface UseMapStore {
   graphic?: Graphic;
   graphics?: Collection<Graphic>;
+  municipios: Graphic[];
 }
 
-export const useMapStore = create<UseMapStore>()(() => ({}));
+export const useMapStore = create<UseMapStore>()(() => ({ municipios: [] }));
 
 export const clearGraphics = () => {
   sketch.layer.graphics.removeAll();
@@ -121,6 +124,7 @@ sketch.on("create", (e) => {
   if (e.state === "complete") {
     setGraphic(e.graphic);
     setGraphics();
+    setMunicipiosFromSketchGeometry(e.graphic.geometry);
   }
 });
 
@@ -142,6 +146,7 @@ sketch.on("update", (e) => {
       if (isUpdated) {
         // El gráfico ha sido actualizado
         setGraphic(updatedGraphic);
+        setMunicipiosFromSketchGeometry(updatedGraphic.geometry);
       }
     });
   }
@@ -150,6 +155,7 @@ sketch.on("update", (e) => {
 sketch.on("delete", () => {
   setGraphic();
   setGraphics();
+  setMunicipiosFromSketchGeometry();
 });
 
 sketch.on("redo", (e) => {
@@ -160,6 +166,7 @@ sketch.on("redo", (e) => {
     if (isUpdated) {
       // El gráfico ha sido actualizado
       setGraphic(updatedGraphic);
+      setMunicipiosFromSketchGeometry(updatedGraphic.geometry);
     }
   });
 });
@@ -172,6 +179,23 @@ sketch.on("undo", (e) => {
     if (isUpdated) {
       // El gráfico ha sido actualizado
       setGraphic(updatedGraphic);
+      setMunicipiosFromSketchGeometry(updatedGraphic.geometry);
     }
   });
 });
+
+function setMunicipiosFromSketchGeometry(geometry?: Geometry) {
+  if (!geometry) useMapStore.setState({ municipios: [] });
+
+  municipiosGeoJSONLayer
+    .queryFeatures({
+      geometry,
+      outFields: ["*"],
+      spatialRelationship: "intersects",
+      returnGeometry: false,
+    })
+    .then((featureSet) => {
+      const result = featureSet.features;
+      useMapStore.setState({ municipios: result });
+    });
+}

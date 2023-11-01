@@ -1,5 +1,5 @@
 import { useRef, useEffect } from "react";
-import { view } from "../map/map";
+import { view } from "../map/config";
 
 export default function Map() {
   const mapDiv = useRef(null);
