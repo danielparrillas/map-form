@@ -4,25 +4,21 @@ import { useMapStore } from "../hooks/mapStore";
 import { graphicToFeature } from "../utils/geoJSON";
 import { sketch } from "../map/sketch";
 import Polygon from "@arcgis/core/geometry/Polygon";
-import Polyline from "@arcgis/core/geometry/Polyline";
-import Graphic from "@arcgis/core/Graphic";
 import Point from "@arcgis/core/geometry/Point";
 
 export default function GeometryForm() {
-  const { graphic: graphicFromMap } = useMapStore();
+  const graphicFromMap = useMapStore((state) => state.graphic);
   const [feature, setFeature] = useState<GeoJSON.Feature>();
-  const [graphic, setGraphic] = useState<Polygon | Polygon | Point>();
+  const [graphic] = useState<Polygon | Polygon | Point>();
 
   useEffect(() => {
-    !!graphicFromMap
+    graphicFromMap
       ? setFeature(graphicToFeature(graphicFromMap))
       : setFeature(undefined);
   }, [graphicFromMap?.geometry]);
 
-  const generarPolygono = (graphic: Graphic) => {};
-
-  const onchange = (value: any, key: string = "") => {
-    value = Number(value);
+  const onchange = (valueString: string, key: string = "") => {
+    const value = Number(valueString);
     if (key !== "Enter" || isNaN(value)) return;
     console.log(value);
     const graphicUid = graphic?.get("uid");

@@ -5,7 +5,7 @@ import { Button } from "antd";
 import GeometryForm from "./GeometryForm";
 
 export function GeometryContainer() {
-  const { graphics } = useMapStore();
+  const graphics = useMapStore((state) => state.graphics);
   useEffect(() => {
     sketch.on("create", (e) => e.state === "complete" && setGraphics());
     sketch.on("update", (e) => e.state === "complete" && setGraphics());
@@ -23,7 +23,8 @@ export function GeometryContainer() {
       <Button className="rounded-none" onClick={() => clearGraphics()}>
         Limpiar
       </Button>
-      {graphics.map((graphic, index) => (
+      {graphics.map(() => (
+        // {graphics.map((graphic, index) => (
         <GeometryForm />
       ))}
     </div>

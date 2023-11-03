@@ -32,12 +32,12 @@ import {
 } from "../utils/geoJSON";
 
 export default function GeometryForm() {
-  const { graphic: graphicFromMap } = useMapStore();
+  const graphicFromMap = useMapStore((state) => state.graphic);
   const [graphic, setGraphic] = useState<Graphic>();
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    !!graphicFromMap ? setGraphic(graphicFromMap) : setGraphic(undefined);
+    graphicFromMap ? setGraphic(graphicFromMap) : setGraphic(undefined);
   }, [graphicFromMap?.geometry]);
 
   const showDrawer = () => {
@@ -58,7 +58,7 @@ export default function GeometryForm() {
           className="w-full"
           addonBefore="x"
           onChange={(value) => {
-            if (!!value) {
+            if (value) {
               updatePoint(
                 graphic.get("uid"),
                 Number(value.toFixed(6)),
@@ -72,7 +72,7 @@ export default function GeometryForm() {
           className="w-full"
           addonBefore="y"
           onChange={(value) => {
-            if (!!value) {
+            if (value) {
               updatePoint(
                 graphic.get("uid"),
                 point.x,
@@ -110,7 +110,7 @@ export default function GeometryForm() {
                   value={Number(coord[0].toFixed(6))}
                   className="w-full"
                   onChange={(value) => {
-                    if (!!value) {
+                    if (value) {
                       updateLine(graphic.get("uid"), value, pathsI, index, 0);
                     }
                   }}
@@ -120,7 +120,7 @@ export default function GeometryForm() {
                   value={Number(coord[1].toFixed(6))}
                   className="w-full"
                   onChange={(value) => {
-                    if (!!value) {
+                    if (value) {
                       updateLine(graphic.get("uid"), value, pathsI, index, 1);
                     }
                   }}
@@ -165,8 +165,8 @@ export default function GeometryForm() {
                   value={Number(coords[0].toFixed(6))}
                   className="w-full"
                   onChange={(value) => {
-                    if (!!value) {
-                      let isFirstOrLast =
+                    if (value) {
+                      const isFirstOrLast =
                         index === 0 || index === subRings.length - 1;
                       updatePolygon(
                         graphic.get("uid"),
@@ -184,8 +184,8 @@ export default function GeometryForm() {
                   value={Number(coords[1].toFixed(6))}
                   className="w-full"
                   onChange={(value) => {
-                    if (!!value) {
-                      let isFirstOrLast =
+                    if (value) {
+                      const isFirstOrLast =
                         index === 0 || index === subRings.length - 1;
                       updatePolygon(
                         graphic.get("uid"),
@@ -208,7 +208,7 @@ export default function GeometryForm() {
 
   return (
     <div className="h-full overflow-hidden flex flex-col gap-2 bg-white p-4 rounded-md shadow-sm">
-      {!!graphic ? (
+      {graphic ? (
         <Tag
           color={
             graphic.geometry.type === "point"
@@ -303,7 +303,7 @@ export default function GeometryForm() {
         open={open}
       >
         <ReactJson
-          src={!!graphic ? graphicToFeature(graphic) : {}}
+          src={graphic ? graphicToFeature(graphic) : {}}
           displayDataTypes={false}
           indentWidth={2}
         />

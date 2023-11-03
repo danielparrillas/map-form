@@ -185,13 +185,18 @@ sketch.on("undo", (e) => {
 });
 
 function setMunicipiosFromSketchGeometry(geometry?: Geometry) {
-  if (!geometry) useMapStore.setState({ municipios: [] });
+  if (!geometry) {
+    useMapStore.setState({ municipios: [] });
+    console.log("No hay geometría");
+    return;
+  }
 
   municipiosGeoJSONLayer
     .queryFeatures({
       geometry,
       outFields: ["*"],
-      spatialRelationship: "intersects",
+      distance: 1,
+      units: "kilometers",
       returnGeometry: false,
     })
     .then((featureSet) => {
