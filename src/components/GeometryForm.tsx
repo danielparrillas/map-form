@@ -52,7 +52,7 @@ export default function GeometryForm() {
     if (graphic === undefined) return;
     const point = new Point(webMercatorToGeographic(graphic.geometry));
     return (
-      <div className="flex flex-col gap-1 h-full overflow-y-auto p-1 bg-neutral-100">
+      <div className="grid gap-1 h-full overflow-y-auto p-1 bg-neutral-100">
         <InputNumber
           value={Number(point.x.toFixed(6))}
           className="w-full"

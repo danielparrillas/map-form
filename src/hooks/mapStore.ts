@@ -11,15 +11,19 @@ import {
 import Polyline from "@arcgis/core/geometry/Polyline";
 import Polygon from "@arcgis/core/geometry/Polygon";
 import { view } from "../map/config";
-import { municipiosGeoJSONLayer } from "../map/services";
+import { municipiosFeatureLayer, cantonesFeatureLayer } from "../map/services";
 
 interface UseMapStore {
   graphic?: Graphic;
   graphics?: Collection<Graphic>;
   municipios: Graphic[];
+  cantones: Graphic[];
 }
 
-export const useMapStore = create<UseMapStore>()(() => ({ municipios: [] }));
+export const useMapStore = create<UseMapStore>()(() => ({
+  municipios: [],
+  cantones: [],
+}));
 
 export const clearGraphics = () => {
   sketch.layer.graphics.removeAll();
@@ -125,6 +129,7 @@ sketch.on("create", (e) => {
     setGraphic(e.graphic);
     setGraphics();
     setMunicipiosFromSketchGeometry(e.graphic.geometry);
+    setCantonesFromSketchGeometry(e.graphic.geometry);
   }
 });
 
@@ -147,6 +152,7 @@ sketch.on("update", (e) => {
         // El gráfico ha sido actualizado
         setGraphic(updatedGraphic);
         setMunicipiosFromSketchGeometry(updatedGraphic.geometry);
+        setCantonesFromSketchGeometry(updatedGraphic.geometry);
       }
     });
   }
@@ -156,6 +162,7 @@ sketch.on("delete", () => {
   setGraphic();
   setGraphics();
   setMunicipiosFromSketchGeometry();
+  setCantonesFromSketchGeometry();
 });
 
 sketch.on("redo", (e) => {
@@ -167,6 +174,7 @@ sketch.on("redo", (e) => {
       // El gráfico ha sido actualizado
       setGraphic(updatedGraphic);
       setMunicipiosFromSketchGeometry(updatedGraphic.geometry);
+      setCantonesFromSketchGeometry(updatedGraphic.geometry);
     }
   });
 });
@@ -180,6 +188,7 @@ sketch.on("undo", (e) => {
       // El gráfico ha sido actualizado
       setGraphic(updatedGraphic);
       setMunicipiosFromSketchGeometry(updatedGraphic.geometry);
+      setCantonesFromSketchGeometry(updatedGraphic.geometry);
     }
   });
 });
@@ -187,20 +196,37 @@ sketch.on("undo", (e) => {
 function setMunicipiosFromSketchGeometry(geometry?: Geometry) {
   if (!geometry) {
     useMapStore.setState({ municipios: [] });
-    console.log("No hay geometría");
     return;
   }
 
-  municipiosGeoJSONLayer
+  municipiosFeatureLayer
     .queryFeatures({
       geometry,
       outFields: ["*"],
-      distance: 1,
-      units: "kilometers",
+      spatialRelationship: "intersects",
       returnGeometry: false,
     })
     .then((featureSet) => {
       const result = featureSet.features;
       useMapStore.setState({ municipios: result });
+    });
+}
+
+function setCantonesFromSketchGeometry(geometry?: Geometry) {
+  if (!geometry) {
+    useMapStore.setState({ cantones: [] });
+    return;
+  }
+
+  cantonesFeatureLayer
+    .queryFeatures({
+      geometry,
+      outFields: ["*"],
+      spatialRelationship: "intersects",
+      returnGeometry: false,
+    })
+    .then((featureSet) => {
+      const result = featureSet.features;
+      useMapStore.setState({ cantones: result });
     });
 }

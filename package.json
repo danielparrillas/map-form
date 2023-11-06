@@ -12,6 +12,7 @@
   "dependencies": {
     "@ant-design/icons": "5.2.6",
     "@arcgis/core": "4.28.5",
+    "@dnd-kit/core": "^6.0.8",
     "@terraformer/arcgis": "2.1.2",
     "@types/arcgis-js-api": "4.28.0",
     "@types/terraformer__arcgis": "2.0.4",

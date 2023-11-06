@@ -9,7 +9,7 @@ export default function Municipios() {
       <ul>
         {municipios.map((municipio, index) => (
           <li key={municipio.attributes.COD_MUN4 ?? `mun-${index}`}>
-            {municipio.attributes.NOM_DPTO} - {municipio.attributes.NOM_MUN}
+            {municipio.attributes.NOM_DPTO} - {municipio.attributes.MUNIC}
           </li>
         ))}
       </ul>
