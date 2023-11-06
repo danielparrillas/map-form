@@ -1,5 +1,5 @@
 import { InputNumber, Button, Tag, Drawer } from "antd";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import ReactJson from "react-json-view";
 import {
   useMapStore,
@@ -195,13 +195,8 @@ const PolygonForm = ({ graphic }: GeometryForm) => {
 };
 
 export default function GeometryForm() {
-  const { graphic: graphicFromMap } = useMapStore();
-  const [graphic, setGraphic] = useState<Graphic>();
+  const { graphic } = useMapStore();
   const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    graphicFromMap ? setGraphic(graphicFromMap) : setGraphic(undefined);
-  }, [graphicFromMap?.geometry]);
 
   const showDrawer = () => {
     setOpen(true);
@@ -282,7 +277,6 @@ export default function GeometryForm() {
             <Button
               onClick={() => {
                 !!graphic && removeGraphic(graphic.get("uid"));
-                setGraphic(undefined);
               }}
               icon={<DeleteOutlined />}
               danger
