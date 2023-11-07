@@ -15,7 +15,7 @@ import {
   downloadKML,
   graphicToFeature,
 } from "../utils/geoJSON";
-import PolygonForm from "./forms/PolygonForm";
+import PolygonForm from "./polygon/PolygonForm";
 import PointForm from "./forms/PointForm";
 import PolylineForm from "./forms/PolylineForm";
 
@@ -80,7 +80,7 @@ export default function GeometryForm() {
       ) : graphic.geometry.type === "polyline" ? (
         <PolylineForm graphic={graphic} />
       ) : graphic.geometry.type === "polygon" ? (
-        <PolygonForm graphic={graphic} />
+        <PolygonForm />
       ) : (
         ""
       )}
