@@ -1,8 +1,8 @@
-import { sketch } from "../map/sketch";
+import { sketch } from "../../map/sketch";
 import { useEffect } from "react";
-import { useMapStore, clearGraphics, setGraphics } from "../hooks/mapStore";
+import { useMapStore, clearGraphics, setGraphics } from "../../hooks/mapStore";
 import { Button } from "antd";
-import GeometryForm from "./GeometryForm";
+import GeometryForm from "./map-form";
 
 export function GeometryContainer() {
   const graphics = useMapStore((state) => state.graphics);

@@ -7,7 +7,7 @@ import config from "@arcgis/core/config";
 import { sketch } from "./sketch";
 // import { fullscreen } from "./fullscreen";
 // import { basemapToggle } from "./basemapToggle";
-import { layerList } from "./layerList";
+// import { layerList } from "./layerList";
 import { municipiosFeatureLayer, cantonesFeatureLayer } from "./services";
 //🧪 testing
 
@@ -33,8 +33,8 @@ view.when(() => {
   sketch.view = view;
   view.ui.add(sketch, "top-right");
   // 4️⃣ layer list
-  layerList.view = view;
-  view.ui.add(layerList, "top-right");
+  // layerList.view = view;
+  // view.ui.add(layerList, "top-right");
   //5️⃣ fullscreen option
   // fullscreen.view = view;
   // view.ui.add(fullscreen, "bottom-right");

@@ -59,6 +59,7 @@ export const removeGraphic = (graphicUID: string | number) => {
       break;
     }
   }
+  setGraphic();
   setGraphics();
 };
 

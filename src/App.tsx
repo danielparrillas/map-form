@@ -1,5 +1,3 @@
-//🎉 third party
-//📒mine
 import Map from "./components/Map";
 import SideBar from "./components/SideBar";
 

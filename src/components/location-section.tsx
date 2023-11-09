@@ -5,7 +5,7 @@ export default function Cantones() {
   console.log(cantones);
   return (
     <section className="p-2 bg-white rounded h-1/3">
-      <h5>Cantones</h5>
+      <h5>Departamento, Municipio, Canton</h5>
       <ul className="list-none p-0 flex flex-col gap-1 h-full overflow-y-auto">
         {cantones.map((canton, index) => {
           const departamento: string = canton.attributes.DPTO ?? "";
