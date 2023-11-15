@@ -20,6 +20,7 @@ import PointSection from "./sections/point-section";
 import PolylineSection from "./sections/polyline-section";
 import PolygonSection from "./sections/polygone-section";
 import Geometry from "@arcgis/core/geometry/Geometry";
+import ImportSection from "./sections/import-section";
 
 type GeometryProperties = {
   color: string;
@@ -75,6 +76,7 @@ export default function GeometryForm() {
         >
           Vacío
         </Tag>
+        <ImportSection />
       </div>
     );
 

@@ -25,7 +25,9 @@ export const view = new MapView({
 
 //⏺️ cuando este lista la instancia del mapa
 view.when(() => {
-  addLayers();
+  view.map.add(municipiosFeatureLayer);
+  view.map.add(cantonesFeatureLayer);
+  view.map.add(sketch.layer);
   // // 1️⃣ basemap toogle
   // basemapToggle.view = view;
   // view.ui.add(basemapToggle, "bottom-left");
@@ -39,9 +41,3 @@ view.when(() => {
   // fullscreen.view = view;
   // view.ui.add(fullscreen, "bottom-right");
 });
-
-function addLayers() {
-  view.map.add(municipiosFeatureLayer);
-  view.map.add(cantonesFeatureLayer);
-  view.map.add(sketch.layer);
-}
