@@ -76,6 +76,8 @@ export const updatePoint = (
       const point = new Point({ x, y });
       graphic.geometry = geographicToWebMercator(point);
       setGraphic(graphic);
+      setMunicipiosFromSketchGeometry(graphic.geometry);
+      setCantonesFromSketchGeometry(graphic.geometry);
     }
   });
 };
@@ -96,6 +98,8 @@ export const updateLine = (
       lineString.paths[index1][index2][index3] = value;
       graphic.geometry = geographicToWebMercator(lineString);
       setGraphic(graphic);
+      setMunicipiosFromSketchGeometry(graphic.geometry);
+      setCantonesFromSketchGeometry(graphic.geometry);
     }
   });
 };
@@ -121,6 +125,8 @@ export const updatePolygon = (
       }
       graphic.geometry = geographicToWebMercator(lineString);
       setGraphic(graphic);
+      setMunicipiosFromSketchGeometry(graphic.geometry);
+      setCantonesFromSketchGeometry(graphic.geometry);
     }
   });
 };
