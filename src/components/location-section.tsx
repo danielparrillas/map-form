@@ -2,7 +2,7 @@ import { useMapStore } from "../hooks/mapStore";
 
 export default function Cantones() {
   const cantones = useMapStore((state) => state.cantones);
-  console.log(cantones);
+  // console.log(cantones);
   return (
     <section className="p-2 bg-white rounded h-1/3">
       <h5>Departamento, Municipio, Canton</h5>

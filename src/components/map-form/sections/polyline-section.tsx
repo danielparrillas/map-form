@@ -33,7 +33,7 @@ export default function PolylineSection() {
                 className="w-full"
                 onChange={(value) => {
                   if (value) {
-                    updateLine(graphic.get("uid"), value, pathsI, index, 0);
+                    updateLine(graphic.uid ?? "", value, pathsI, index, 0);
                   }
                 }}
               />
@@ -45,7 +45,7 @@ export default function PolylineSection() {
                 controls={false}
                 onChange={(value) => {
                   if (value) {
-                    updateLine(graphic.get("uid"), value, pathsI, index, 1);
+                    updateLine(graphic.uid ?? "", value, pathsI, index, 1);
                   }
                 }}
               />

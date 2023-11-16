@@ -104,7 +104,7 @@ export default function GeometryForm() {
           </Button>
           <Button
             onClick={() => {
-              removeGraphic(graphic.get("uid"));
+              removeGraphic(graphic.uid ?? "");
             }}
             icon={<DeleteOutlined />}
             danger

@@ -13,11 +13,13 @@ import Polygon from "@arcgis/core/geometry/Polygon";
 import { view } from "../map/config";
 import { municipiosFeatureLayer, cantonesFeatureLayer } from "../map/services";
 
+type GraphicWithUID = Graphic & { uid?: string };
+
 interface UseMapStore {
-  graphic?: Graphic;
-  graphics?: Collection<Graphic>;
-  municipios: Graphic[];
-  cantones: Graphic[];
+  graphic?: GraphicWithUID;
+  graphics?: Collection<GraphicWithUID>;
+  municipios: GraphicWithUID[];
+  cantones: GraphicWithUID[];
 }
 
 export const useMapStore = create<UseMapStore>()(() => ({
@@ -40,8 +42,8 @@ export const setGraphic = (graphic?: Graphic) => {
 export const selectGraphic = (graphicUID: string | number) => {
   const graphics = sketch.layer.graphics;
   for (let index = 0; index < graphics.length; index++) {
-    const item = graphics.getItemAt(index);
-    if (item.get("uid") === graphicUID) {
+    const item: GraphicWithUID = graphics.getItemAt(index);
+    if (item?.uid === graphicUID) {
       view.goTo(item);
       if (item.geometry.type === "point") view.zoom = 20;
       setGraphic(item);
@@ -53,8 +55,8 @@ export const selectGraphic = (graphicUID: string | number) => {
 export const removeGraphic = (graphicUID: string | number) => {
   const graphics = sketch.layer.graphics;
   for (let index = 0; index < graphics.length; index++) {
-    const item = graphics.getItemAt(index);
-    if (item.get("uid") === graphicUID) {
+    const item: GraphicWithUID = graphics.getItemAt(index);
+    if (item?.uid === graphicUID) {
       graphics.removeAt(index);
       break;
     }
@@ -69,8 +71,8 @@ export const updatePoint = (
   y: number
 ) => {
   const graphics = sketch.layer.graphics;
-  graphics.forEach((graphic) => {
-    if (graphic.get("uid") === graphicUID) {
+  graphics.forEach((graphic: GraphicWithUID) => {
+    if (graphic?.uid === graphicUID) {
       const point = new Point({ x, y });
       graphic.geometry = geographicToWebMercator(point);
       setGraphic(graphic);
@@ -86,8 +88,8 @@ export const updateLine = (
   index3: number
 ) => {
   const graphics = sketch.layer.graphics;
-  graphics.forEach((graphic) => {
-    if (graphic.get("uid") === graphicUID) {
+  graphics.forEach((graphic: GraphicWithUID) => {
+    if (graphic?.uid === graphicUID) {
       const lineString = new Polyline(
         webMercatorToGeographic(graphic.geometry)
       );
@@ -107,8 +109,8 @@ export const updatePolygon = (
   isFirstOrLast: boolean
 ) => {
   const graphics = sketch.layer.graphics;
-  graphics.forEach((graphic) => {
-    if (graphic.get("uid") === graphicUID) {
+  graphics.forEach((graphic: GraphicWithUID) => {
+    if (graphic?.uid === graphicUID) {
       const lineString = new Polygon(webMercatorToGeographic(graphic.geometry));
       if (isFirstOrLast) {
         const lastIndex = lineString.rings[index1].length - 1;
@@ -145,10 +147,12 @@ sketch.on("update", (e) => {
   const isStartOrCompleteState =
     !e.toolEventInfo && (e.state === "start" || e.state === "complete");
   if (isEditEventType || isStartOrCompleteState) {
-    e.graphics.forEach((updatedGraphic) => {
-      const isUpdated = sketch.layer.graphics.some((previousGraphic) => {
-        return previousGraphic.get("uid") === updatedGraphic.get("uid");
-      });
+    e.graphics.forEach((updatedGraphic: GraphicWithUID) => {
+      const isUpdated = sketch.layer.graphics.some(
+        (previousGraphic: GraphicWithUID) => {
+          return previousGraphic?.uid === updatedGraphic?.uid;
+        }
+      );
       if (isUpdated) {
         // El gráfico ha sido actualizado
         setGraphic(updatedGraphic);
@@ -167,10 +171,12 @@ sketch.on("delete", () => {
 });
 
 sketch.on("redo", (e) => {
-  e.graphics.forEach((updatedGraphic) => {
-    const isUpdated = sketch.layer.graphics.some((previousGraphic) => {
-      return previousGraphic.get("uid") === updatedGraphic.get("uid");
-    });
+  e.graphics.forEach((updatedGraphic: GraphicWithUID) => {
+    const isUpdated = sketch.layer.graphics.some(
+      (previousGraphic: GraphicWithUID) => {
+        return previousGraphic?.uid === updatedGraphic?.uid;
+      }
+    );
     if (isUpdated) {
       // El gráfico ha sido actualizado
       setGraphic(updatedGraphic);
@@ -181,10 +187,12 @@ sketch.on("redo", (e) => {
 });
 
 sketch.on("undo", (e) => {
-  e.graphics.forEach((updatedGraphic) => {
-    const isUpdated = sketch.layer.graphics.some((previousGraphic) => {
-      return previousGraphic.get("uid") === updatedGraphic.get("uid");
-    });
+  e.graphics.forEach((updatedGraphic: GraphicWithUID) => {
+    const isUpdated = sketch.layer.graphics.some(
+      (previousGraphic: GraphicWithUID) => {
+        return previousGraphic?.uid === updatedGraphic?.uid;
+      }
+    );
     if (isUpdated) {
       // El gráfico ha sido actualizado
       setGraphic(updatedGraphic);

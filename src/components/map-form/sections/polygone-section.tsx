@@ -46,7 +46,7 @@ export default function PolygonSection() {
                     const isFirstOrLast =
                       index === 0 || index === subRings.length - 1;
                     updatePolygon(
-                      graphic.get("uid"),
+                      graphic.uid ?? "",
                       value,
                       sri,
                       index,
@@ -67,7 +67,7 @@ export default function PolygonSection() {
                     const isFirstOrLast =
                       index === 0 || index === subRings.length - 1;
                     updatePolygon(
-                      graphic.get("uid"),
+                      graphic.uid ?? "",
                       value,
                       sri,
                       index,

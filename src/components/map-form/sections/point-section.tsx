@@ -17,7 +17,7 @@ export default function PointSection() {
         addonBefore="x"
         onChange={(value) => {
           if (value) {
-            updatePoint(graphic.get("uid"), Number(value.toFixed(8)), point.y);
+            updatePoint(graphic.uid ?? "", Number(value.toFixed(8)), point.y);
           }
         }}
       />
@@ -28,7 +28,7 @@ export default function PointSection() {
         addonBefore="y"
         onChange={(value) => {
           if (value) {
-            updatePoint(graphic.get("uid"), point.x, Number(value.toFixed(8)));
+            updatePoint(graphic.uid ?? "", point.x, Number(value.toFixed(8)));
           }
         }}
       />
