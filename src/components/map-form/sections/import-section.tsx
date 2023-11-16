@@ -9,9 +9,11 @@ import Polygon from "@arcgis/core/geometry/Polygon";
 import Polyline from "@arcgis/core/geometry/Polyline";
 import Point from "@arcgis/core/geometry/Point";
 import { setGraphic } from "../../../hooks/mapStore";
-import SimpleFillSymbol from "@arcgis/core/symbols/SimpleFillSymbol";
-import SimpleMarkerSymbol from "@arcgis/core/symbols/SimpleMarkerSymbol";
-import SimpleLineSymbol from "@arcgis/core/symbols/SimpleLineSymbol";
+import {
+  polygonStyle,
+  lineStyle,
+  markerStyle,
+} from "../../../map/graphic-styles";
 import { view } from "../../../map/config";
 import { geographicToWebMercator } from "@arcgis/core/geometry/support/webMercatorUtils";
 
@@ -43,7 +45,7 @@ const beforeUpload: UploadProps["beforeUpload"] = async (file, fileList) => {
         geometry: geographicToWebMercator(
           new Point(geojsonToArcGIS(feature.geometry))
         ),
-        symbol: new SimpleMarkerSymbol(),
+        symbol: markerStyle,
       });
       break;
     case "LineString":
@@ -51,7 +53,7 @@ const beforeUpload: UploadProps["beforeUpload"] = async (file, fileList) => {
         geometry: geographicToWebMercator(
           new Polyline(geojsonToArcGIS(feature.geometry))
         ),
-        symbol: new SimpleLineSymbol(),
+        symbol: lineStyle,
       });
       break;
     case "Polygon":
@@ -59,7 +61,7 @@ const beforeUpload: UploadProps["beforeUpload"] = async (file, fileList) => {
         geometry: geographicToWebMercator(
           new Polygon(geojsonToArcGIS(feature.geometry))
         ),
-        symbol: new SimpleFillSymbol(),
+        symbol: polygonStyle,
       });
       break;
     default:

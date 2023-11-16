@@ -39,7 +39,7 @@ export const geojsonStyles = {
   // multigeometry
   //
   // value must follow COLOR RULES
-  stroke: "#000",
+  stroke: "#ff8c00",
 
   // OPTIONAL: default 1.0
   // the opacity of the line component of a polygon, polyline, or
@@ -54,13 +54,13 @@ export const geojsonStyles = {
   // multigeometry
   //
   // value must be a floating point number greater than or equal to 0
-  "stroke-width": 2,
+  "stroke-width": 3,
 
   // OPTIONAL: default "555555"
   // the color of the interior of a polygon
   //
   // value must follow COLOR RULES
-  fill: "#000",
+  fill: "#ff8c00",
 
   // OPTIONAL: default 0.6
   // the opacity of the interior of a polygon. Implementations
@@ -68,5 +68,5 @@ export const geojsonStyles = {
   //
   // value must be a floating point number greater than or equal to
   // zero and less or equal to than one
-  "fill-opacity": 0.25,
+  "fill-opacity": 0.2,
 };

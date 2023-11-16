@@ -12,5 +12,6 @@ export const sketch = new Sketch({
   creationMode: "update",
   visibleElements: {
     settingsMenu: false,
+    selectionTools: { "lasso-selection": false, "rectangle-selection": false },
   },
 });
