@@ -8,6 +8,7 @@ import {
 import Polygon from "@arcgis/core/geometry/Polygon";
 import Polyline from "@arcgis/core/geometry/Polyline";
 import tokml from "tokml";
+import { geojsonStyles } from "./geojson-styles";
 
 export const graphicToFeature = (graphic: Graphic): GeoJSON.Feature => {
   let feature: GeoJSON.Feature;
@@ -20,6 +21,7 @@ export const graphicToFeature = (graphic: Graphic): GeoJSON.Feature => {
       properties: {
         length: geodesicLength(line, "meters"),
         lengthUnit: "meters",
+        ...geojsonStyles,
       },
     };
   } else if (graphic.geometry.type === "polygon") {
@@ -32,13 +34,16 @@ export const graphicToFeature = (graphic: Graphic): GeoJSON.Feature => {
         perimeterUnit: "meters",
         area: geodesicArea(polygon, "hectares"),
         areaUnit: "hectareas",
+        ...geojsonStyles,
       },
     };
   } else {
     feature = {
       type: "Feature",
       geometry,
-      properties: {},
+      properties: {
+        ...geojsonStyles,
+      },
     };
   }
   return feature;
@@ -61,13 +66,17 @@ export const downloadGeoJSON = (
 export const downloadKML = (
   geoJSON: GeoJSON.Feature | GeoJSON.FeatureCollection
 ) => {
-  const kmlString = tokml(geoJSON);
+  const kmlString = tokml(geoJSON, {
+    simplestyle: true,
+    documentName: "Geometry",
+    documentDescription: "Evento de restauración",
+  });
   const blob = new Blob([kmlString], {
     type: "application/vnd.google-earth.kml+xml",
   });
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
   link.href = url;
-  link.download = "export.kml";
+  link.download = "geometry.kml";
   link.click();
 };
