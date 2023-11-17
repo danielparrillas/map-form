@@ -94,7 +94,10 @@ const onChange: UploadProps["onChange"] = (info) => {
 
 const App: React.FC = () => {
   return (
-    <section className="w-40">
+    <section className="w-full pr-2">
+      <p className="bg-gray-50 text-gray-800 p-4 rounded">
+        Dibuja una geometría en el mapa o importa desde un archivo KML.
+      </p>
       <Upload
         name="import-kml-file"
         accept=".kml"
@@ -102,8 +105,11 @@ const App: React.FC = () => {
         beforeUpload={beforeUpload}
         onRemove={onRemove}
         onChange={onChange}
+        className="w-full"
       >
-        <Button icon={<UploadOutlined />}>Importar KML</Button>
+        <Button icon={<UploadOutlined />} type="primary" className="w-full">
+          Subir KML
+        </Button>
       </Upload>
     </section>
   );

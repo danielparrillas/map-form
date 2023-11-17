@@ -76,12 +76,6 @@ export default function GeometryForm() {
   if (graphic === undefined)
     return (
       <div className="h-full overflow-hidden flex flex-col gap-2 bg-white p-4 rounded-md shadow-sm">
-        <Tag
-          icon={<AimOutlined />}
-          className="w-full rounded-md flex items-center"
-        >
-          Vacío
-        </Tag>
         <ImportSection />
       </div>
     );

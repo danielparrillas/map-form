@@ -16,7 +16,7 @@ export const geojsonStyles = {
   // "small"
   // "medium"
   // "large"
-  "marker-size": "medium",
+  "marker-size": "large",
 
   // OPTIONAL: default ""
   // a symbol to position in the center of this icon
@@ -26,13 +26,13 @@ export const geojsonStyles = {
   // - Icon ID
   // - An integer 0 through 9
   // - A lowercase character "a" through "z"
-  "marker-symbol": "bus",
+  "marker-symbol": "",
 
   // OPTIONAL: default "7e7e7e"
   // the marker's color
   //
   // value must follow COLOR RULES
-  "marker-color": "#fff",
+  "marker-color": "#ff8c00",
 
   // OPTIONAL: default "555555"
   // the color of a line as part of a polygon, polyline, or
@@ -68,5 +68,5 @@ export const geojsonStyles = {
   //
   // value must be a floating point number greater than or equal to
   // zero and less or equal to than one
-  "fill-opacity": 0.2,
+  "fill-opacity": 0.3,
 };
