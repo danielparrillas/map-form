@@ -1,4 +1,4 @@
-import { useMapStore } from "../hooks/mapStore";
+import { useMapStore } from "../../hooks/mapStore";
 
 export default function Municipios() {
   const municipios = useMapStore((state) => state.municipios);

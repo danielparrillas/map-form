@@ -1,10 +1,10 @@
-import Map from "./components/Map";
-import SideBar from "./components/SideBar";
+import Map from "./components/map-form/map";
+import MapForm from "./components/map-form/map-form";
 
 function App() {
   return (
     <div className="overflow-hidden flex h-screen">
-      <SideBar />
+      <MapForm />
       <Map />
     </div>
   );

@@ -1,4 +1,4 @@
-import { Button, Tag, Drawer } from "antd";
+import { Button, Tag, Drawer, Popconfirm } from "antd";
 import { useState } from "react";
 import ReactJson from "react-json-view";
 import { useMapStore, removeGraphic } from "../../hooks/mapStore";
@@ -21,6 +21,8 @@ import PolylineSection from "./sections/polyline-section";
 import PolygonSection from "./sections/polygone-section";
 import Geometry from "@arcgis/core/geometry/Geometry";
 import ImportSection from "./sections/import-section";
+import { view } from "../../map/config";
+import type { PopconfirmProps } from "antd/es/popconfirm";
 
 type GeometryProperties = {
   color: string;
@@ -60,6 +62,10 @@ export default function GeometryForm() {
   const { graphic } = useMapStore();
   const [open, setOpen] = useState(false);
 
+  const confirmDeleteGeometry: PopconfirmProps["onConfirm"] = () => {
+    graphic && removeGraphic(graphic.uid ?? "");
+  };
+
   const showDrawer = () => {
     setOpen(true);
   };
@@ -81,35 +87,36 @@ export default function GeometryForm() {
     );
 
   return (
-    <div className="h-full overflow-hidden flex flex-col gap-2 bg-white p-4 rounded-md shadow-sm">
+    <div className="h-full flex flex-col gap-2 bg-white p-4 rounded-md shadow-sm">
       <Tag
         color={geometryProperties[graphic.geometry.type]?.color}
         icon={geometryProperties[graphic.geometry.type]?.icon}
-        className="w-full  rounded-md flex items-center"
+        className="w-full rounded-md flex items-center cursor-pointer h-16"
+        onClick={() => view.goTo(graphic)}
       >
-        {geometryProperties[graphic.geometry.type]?.title}
+        Ir a {geometryProperties[graphic.geometry.type]?.title}
       </Tag>
       {geometryProperties[graphic.geometry.type]?.section}
-      <div className="w-full h-min grid place-content-end">
-        <div className="flex gap-2">
-          <Button color="cyan" icon={<EyeOutlined />} onClick={showDrawer}>
-            Geojson
-          </Button>
-          <Button
-            color="blue"
-            icon={<DownloadOutlined />}
-            onClick={() => downloadKML(graphicToFeature(graphic))}
-          >
-            KML
-          </Button>
-          <Button
-            onClick={() => {
-              removeGraphic(graphic.uid ?? "");
-            }}
-            icon={<DeleteOutlined />}
-            danger
-          />
-        </div>
+      <div className="w-full h-24 flex gap-2">
+        <Popconfirm
+          title="Elimininar geometría"
+          description="¿Estás seguro que quieres eliminarla?"
+          onConfirm={confirmDeleteGeometry}
+          okText="Yes"
+          cancelText="No"
+        >
+          <Button icon={<DeleteOutlined />} danger />
+        </Popconfirm>
+        <Button color="cyan" icon={<EyeOutlined />} onClick={showDrawer}>
+          JSON
+        </Button>
+        <Button
+          color="blue"
+          icon={<DownloadOutlined />}
+          onClick={() => downloadKML(graphicToFeature(graphic))}
+        >
+          KML
+        </Button>
       </div>
       <Drawer
         title={

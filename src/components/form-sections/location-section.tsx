@@ -1,4 +1,4 @@
-import { useMapStore } from "../hooks/mapStore";
+import { useMapStore } from "../../hooks/mapStore";
 
 export default function Cantones() {
   const cantones = useMapStore((state) => state.cantones);

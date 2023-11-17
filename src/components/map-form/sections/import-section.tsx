@@ -94,16 +94,18 @@ const onChange: UploadProps["onChange"] = (info) => {
 
 const App: React.FC = () => {
   return (
-    <Upload
-      name="import-kml-file"
-      accept=".kml"
-      maxCount={1}
-      beforeUpload={beforeUpload}
-      onRemove={onRemove}
-      onChange={onChange}
-    >
-      <Button icon={<UploadOutlined />}>Select File</Button>
-    </Upload>
+    <section className="w-40">
+      <Upload
+        name="import-kml-file"
+        accept=".kml"
+        maxCount={1}
+        beforeUpload={beforeUpload}
+        onRemove={onRemove}
+        onChange={onChange}
+      >
+        <Button icon={<UploadOutlined />}>Importar KML</Button>
+      </Upload>
+    </section>
   );
 };
 
