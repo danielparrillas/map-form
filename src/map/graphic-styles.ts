@@ -3,7 +3,13 @@ import SimpleMarkerSymbol from "@arcgis/core/symbols/SimpleMarkerSymbol";
 import SimpleLineSymbol from "@arcgis/core/symbols/SimpleLineSymbol";
 // import Color from "@arcgis/core/Color.js";
 
-export const markerStyle = new SimpleMarkerSymbol();
+export const markerStyle = new SimpleMarkerSymbol({
+  color: "rgba(255,140,0,1)",
+  outline: {
+    color: "white",
+    width: 2,
+  },
+});
 export const lineStyle = new SimpleLineSymbol({
   color: "darkorange",
   width: 2,

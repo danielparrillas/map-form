@@ -102,7 +102,7 @@ export default function GeometryForm() {
           title="Elimininar geometría"
           description="¿Estás seguro que quieres eliminarla?"
           onConfirm={confirmDeleteGeometry}
-          okText="Yes"
+          okText="Sí"
           cancelText="No"
         >
           <Button icon={<DeleteOutlined />} danger />
