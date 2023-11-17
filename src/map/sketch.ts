@@ -1,5 +1,7 @@
 import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
 import Sketch from "@arcgis/core/widgets/Sketch";
+import SketchViewModel from "@arcgis/core/widgets/Sketch/SketchViewModel";
+import { lineStyle, markerStyle, polygonStyle } from "./graphic-styles";
 
 const sketchLayer = new GraphicsLayer({ title: "✏️ Capa de dibujo" });
 
@@ -14,4 +16,9 @@ export const sketch = new Sketch({
     settingsMenu: false,
     selectionTools: { "lasso-selection": false, "rectangle-selection": false },
   },
+  viewModel: new SketchViewModel({
+    pointSymbol: markerStyle,
+    polylineSymbol: lineStyle,
+    polygonSymbol: polygonStyle,
+  }),
 });
